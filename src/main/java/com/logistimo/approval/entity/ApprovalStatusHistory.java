@@ -27,7 +27,7 @@ public class ApprovalStatusHistory {
   @Column(name = "approval_id")
   private String approvalId;
 
-  @Column(name = "approverStatus")
+  @Column(name = "status")
   private String status;
 
   @Column(name = "updated_by")

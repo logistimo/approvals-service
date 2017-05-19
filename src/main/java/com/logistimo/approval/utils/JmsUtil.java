@@ -13,7 +13,7 @@ import org.springframework.stereotype.Component;
 public class JmsUtil {
 
   @Autowired
-  @Produce(uri = "jms:approval-approverStatus-update")
+  @Produce(uri = "jms:approval-status-update")
   ProducerTemplate producerTemplate;
 
   public void sendMessage(String message) {

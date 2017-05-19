@@ -12,6 +12,6 @@ public class CamelRoutes extends RouteBuilder {
 
   @Override
   public void configure() throws Exception {
-    from("jms:approval-approverStatus-update").to("log:?level=TRACE&showAll=true");
+    from("jms:approval-status-update").to("log:?level=TRACE&showAll=true");
   }
 }

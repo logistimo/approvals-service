@@ -33,7 +33,7 @@ public class ApprovalSpecifications {
       return null;
     }
     return (root, query, cb) -> {
-      return cb.equal(root.get("approverStatus"), status);
+      return cb.equal(root.get("status"), status);
     };
   }
 
