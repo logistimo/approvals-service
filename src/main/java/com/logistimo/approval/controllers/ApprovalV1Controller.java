@@ -3,8 +3,10 @@ package com.logistimo.approval.controllers;
 import com.logistimo.approval.actions.CreateApprovalAction;
 import com.logistimo.approval.actions.GetApprovalAction;
 import com.logistimo.approval.actions.GetApprovalStatusHistoryAction;
+import com.logistimo.approval.actions.GetFilteredApprovalsAction;
 import com.logistimo.approval.actions.UpdateApprovalDomainMappingAction;
 import com.logistimo.approval.actions.UpdateApprovalStatusAction;
+import com.logistimo.approval.entity.Approval;
 import com.logistimo.approval.models.ApprovalRequest;
 import com.logistimo.approval.models.ApprovalResponse;
 import com.logistimo.approval.models.DomainUpdateRequest;
@@ -16,6 +18,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
+import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -42,6 +45,7 @@ public class ApprovalV1Controller {
   private GetApprovalAction getApprovalAction;
   private CreateApprovalAction createApprovalAction;
   private GetApprovalStatusHistoryAction getApprovalStatusHistoryAction;
+  private GetFilteredApprovalsAction getFilteredApprovalsAction;
   private UpdateApprovalStatusAction updateApprovalStatusAction;
   private UpdateApprovalDomainMappingAction updateApprovalDomainMappingAction;
 
@@ -54,16 +58,21 @@ public class ApprovalV1Controller {
 
   @ResponseBody
   @ResponseStatus(value = HttpStatus.OK)
-  @RequestMapping(path = "/", method = RequestMethod.GET)
-  public List<ApprovalResponse> getApprovals(@RequestParam("requester_id") String requesterId,
-      @RequestParam("status") String status, @RequestParam("expiring_in") String expiringIn,
-      @RequestParam("approver_id") String approverId,
-      @RequestParam("approver_status") String approverStatus,
-      @RequestParam("type") String type, @RequestParam("type_id") String typeId,
-      @RequestParam("ordered_by") String orderedBy,
-      @RequestParam("attribute_key") String attributeKey,
-      @RequestParam("attribute_value") String attributeValue) {
-    return null;
+  @RequestMapping(method = RequestMethod.GET)
+  public Page<Approval> getApprovals(
+      @RequestParam(value = "offset") int offset, @RequestParam(value = "size") int size,
+      @RequestParam(value = "requester_id", required = false) String requesterId,
+      @RequestParam(value = "status", required = false) String status,
+      @RequestParam(value = "expiring_in", required = false) Long expiringInMinutes,
+      @RequestParam(value = "approver_id", required = false) String approverId,
+      @RequestParam(value = "approver_status", required = false) String approverStatus,
+      @RequestParam(value = "type", required = false) String type,
+      @RequestParam(value = "type_id", required = false) String typeId,
+      @RequestParam(value = "ordered_by", required = false) String orderedBy,
+      @RequestParam(value = "attribute_key", required = false) String attributeKey,
+      @RequestParam(value = "attribute_value", required = false) String attributeValue) {
+    return getFilteredApprovalsAction.invoke(offset, size, requesterId, status, expiringInMinutes,
+        approverId, approverStatus, type, typeId, orderedBy, attributeKey, attributeValue);
   }
 
   @ResponseBody
@@ -84,7 +93,7 @@ public class ApprovalV1Controller {
 
   @ResponseBody
   @ResponseStatus(value = HttpStatus.NO_CONTENT)
-  @RequestMapping(path = "/{approvalId}/status", method = RequestMethod.PUT)
+  @RequestMapping(path = "/{approvalId}/approverStatus", method = RequestMethod.PUT)
   public Void updateApprovalStatusHistory(@PathVariable("approvalId") String approvalId,
       @RequestBody StatusUpdateRequest request) {
     return updateApprovalStatusAction.invoke(approvalId, request);

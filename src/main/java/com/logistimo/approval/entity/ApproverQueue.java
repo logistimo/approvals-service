@@ -30,8 +30,8 @@ public class ApproverQueue {
   @Column(name = "approval_id")
   private String approvalId;
 
-  @Column(name = "status")
-  private String status;
+  @Column(name = "approver_status")
+  private String approverStatus;
 
   @Column(name = "start_time")
   private Date startTime;

@@ -31,10 +31,10 @@ import org.springframework.util.CollectionUtils;
 public class GetApprovalAction {
 
   @Autowired
-  IApprovalRepository approvalRepository;
+  private IApprovalRepository approvalRepository;
 
   @Autowired
-  IApproverQueueRepository approverQueueRepository;
+  private IApproverQueueRepository approverQueueRepository;
 
   @Autowired
   private IApprovalAttributesRepository approvalAttributesRepository;

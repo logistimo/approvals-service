@@ -1,5 +1,7 @@
 package com.logistimo.approval.actions;
 
+import com.logistimo.approval.conversationclient.IConversationClient;
+import com.logistimo.approval.conversationclient.response.PostMessageRequest;
 import com.logistimo.approval.entity.Approval;
 import com.logistimo.approval.entity.ApprovalAttributes;
 import com.logistimo.approval.entity.ApprovalDomainMapping;
@@ -17,7 +19,6 @@ import com.logistimo.approval.repository.IApproverQueueRepository;
 import com.logistimo.approval.utils.Constants;
 import java.util.List;
 import java.util.UUID;
-import lombok.Getter;
 import org.apache.catalina.connector.Response;
 import org.modelmapper.ModelMapper;
 import org.slf4j.Logger;
@@ -49,6 +50,9 @@ public class CreateApprovalAction {
 
   @Autowired
   private IApprovalDomainMappingRepository approvalDomainMappingRepository;
+
+  @Autowired
+  private IConversationClient conversationClient;
 
   private static final Logger log = LoggerFactory.getLogger(CreateApprovalAction.class);
 
@@ -124,7 +128,7 @@ public class CreateApprovalAction {
         approverQueue.setUserId(approver.getUserId());
         approverQueue.setStartTime(approver.getStartTime());
         approverQueue.setEndTime(approver.getEndTime());
-        approverQueue.setStatus(Constants.QUEUED_STATUS);
+        approverQueue.setApproverStatus(Constants.QUEUED_STATUS);
         approverQueueRepository.save(approverQueue);
       }
     }
@@ -144,6 +148,10 @@ public class CreateApprovalAction {
     String approvalId = UUID.randomUUID().toString().replace("-", "");
 
     String conversationId = "C123";
+
+    PostMessageRequest postMessageRequest = new PostMessageRequest();
+    postMessageRequest.setData("This is my message.");
+    conversationClient.postMessage(postMessageRequest, "Approval", approvalId);
 
     Approval approval = new Approval();
     approval.setId(approvalId);

@@ -9,6 +9,7 @@ import com.logistimo.approval.exception.BaseException;
 import com.logistimo.approval.models.StatusUpdateRequest;
 import com.logistimo.approval.repository.IApprovalRepository;
 import com.logistimo.approval.repository.IApprovalStatusHistoryRepository;
+import com.logistimo.approval.utils.JmsUtil;
 import java.util.Date;
 import org.apache.catalina.connector.Response;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -27,6 +28,10 @@ public class UpdateApprovalStatusAction {
   @Autowired
   private IApprovalStatusHistoryRepository approvalStatusHistoryRepository;
 
+
+  @Autowired
+  private JmsUtil jmsUtil;
+
   public Void invoke(String approvalId, StatusUpdateRequest request) {
 
     Approval approval = approvalRepository.findOne(approvalId);
@@ -41,7 +46,8 @@ public class UpdateApprovalStatusAction {
 
     Date now = new Date();
 
-    ApprovalStatusHistory lastStatus = approvalStatusHistoryRepository.findLastUpdateByApprovalId(approvalId);
+    ApprovalStatusHistory lastStatus = approvalStatusHistoryRepository
+        .findLastUpdateByApprovalId(approvalId);
     lastStatus.setEndTime(now);
 
     approvalStatusHistoryRepository.save(lastStatus);
@@ -55,7 +61,7 @@ public class UpdateApprovalStatusAction {
 
     approvalStatusHistoryRepository.save(newStatus);
 
-    //Event generation
+    jmsUtil.sendMessage("Message bhejungi");
 
     return null;
   }
