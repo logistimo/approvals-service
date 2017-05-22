@@ -63,7 +63,7 @@ public class ApprovalV1Controller {
       @RequestParam(value = "offset") int offset, @RequestParam(value = "size") int size,
       @RequestParam(value = "requester_id", required = false) String requesterId,
       @RequestParam(value = "status", required = false) String status,
-      @RequestParam(value = "expiring_in", required = false) Long expiringInMinutes,
+      @RequestParam(value = "expiring_in", required = false) String expiringInMinutes,
       @RequestParam(value = "approver_id", required = false) String approverId,
       @RequestParam(value = "approver_status", required = false) String approverStatus,
       @RequestParam(value = "type", required = false) String type,

@@ -4,12 +4,13 @@ import com.logistimo.approval.entity.Approval;
 import com.logistimo.approval.entity.ApprovalAttributes;
 import com.logistimo.approval.entity.ApproverQueue;
 import java.util.Date;
-import java.util.concurrent.TimeUnit;
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Join;
+import javax.persistence.criteria.Path;
 import javax.persistence.criteria.Predicate;
 import javax.persistence.criteria.Root;
+import org.apache.commons.lang.time.DateUtils;
 import org.springframework.data.jpa.domain.Specification;
 
 /**
@@ -55,17 +56,16 @@ public class ApprovalSpecifications {
     };
   }
 
-//  public static Specification<Approval> withExpiringInMinutes(Long minutes) {
-//    if (minutes == null) {
-//      return null;
-//    }
-//    return (root, query, cb) -> {
-//      Date current = new Date();
-//      Date expireAt = (Date) root.get("expireAt");
-//      long duration = TimeUnit.MILLISECONDS.toMinutes(expireAt.getTime() - current.getTime());
-//      return cb.le(duration, minutes.longValue());
-//    };
-//  }
+  public static Specification<Approval> withExpiringInMinutes(String x) {
+    if (x == null) {
+      return null;
+    }
+    return (root, query, cb) -> {
+      Date currentDatePlusXMinutes = DateUtils.addMinutes(new Date(), Integer.parseInt(x));
+      Path<Date> expireAtPath = root.get("expireAt");
+      return cb.lessThan(expireAtPath, currentDatePlusXMinutes);
+    };
+  }
 
   public static Specification<Approval> withApproverId(String approverId) {
     if (approverId == null) {
@@ -82,7 +82,8 @@ public class ApprovalSpecifications {
     };
   }
 
-  public static Specification<Approval> withApproverStatus(String approverId, String approverStatus) {
+  public static Specification<Approval> withApproverStatus(String approverId,
+      String approverStatus) {
     if (approverId == null || approverStatus == null) {
       return null;
     }
