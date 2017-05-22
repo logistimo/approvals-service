@@ -138,6 +138,7 @@ public class CreateApprovalAction {
     ApprovalStatusHistory approvalStatusHistory = new ApprovalStatusHistory();
     approvalStatusHistory.setApprovalId(approval.getId());
     approvalStatusHistory.setStatus(approval.getStatus());
+    approvalStatusHistory.setUpdatedBy(approval.getRequesterId());
 //    Set the message id as the id of the message received
 //    approvalStatusHistory.setMessageId();
     approvalStatusHistoryRepository.save(approvalStatusHistory);
