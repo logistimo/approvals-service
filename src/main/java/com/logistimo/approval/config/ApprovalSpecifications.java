@@ -24,36 +24,28 @@ public class ApprovalSpecifications {
     if (requesterId == null) {
       return null;
     }
-    return (root, query, cb) -> {
-      return cb.equal(root.get("requesterId"), requesterId);
-    };
+    return (root, query, cb) -> cb.equal(root.get("requesterId"), requesterId);
   }
 
   public static Specification<Approval> withStatus(String status) {
     if (status == null) {
       return null;
     }
-    return (root, query, cb) -> {
-      return cb.equal(root.get("status"), status);
-    };
+    return (root, query, cb) -> cb.equal(root.get("status"), status);
   }
 
   public static Specification<Approval> withType(String type) {
     if (type == null) {
       return null;
     }
-    return (root, query, cb) -> {
-      return cb.equal(root.get("type"), type);
-    };
+    return (root, query, cb) -> cb.equal(root.get("type"), type);
   }
 
   public static Specification<Approval> withTypeId(String typeId) {
     if (typeId == null) {
       return null;
     }
-    return (root, query, cb) -> {
-      return cb.equal(root.get("typeId"), typeId);
-    };
+    return (root, query, cb) -> cb.equal(root.get("typeId"), typeId);
   }
 
   public static Specification<Approval> withExpiringInMinutes(String x) {

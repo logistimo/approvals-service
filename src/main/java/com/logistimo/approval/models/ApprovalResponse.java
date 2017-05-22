@@ -29,8 +29,6 @@ public class ApprovalResponse {
 
   private List<Long> domains;
 
-  private String message;
-
   @JsonFormat(pattern = "yyyy-MM-dd hh:mm:ss")
   private Date expireAt;
 
