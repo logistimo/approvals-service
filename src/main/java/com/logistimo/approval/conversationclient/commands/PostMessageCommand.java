@@ -5,6 +5,12 @@ import com.logistimo.approval.conversationclient.request.PostMessageResponse;
 import com.logistimo.approval.conversationclient.response.PostMessageRequest;
 import com.netflix.hystrix.HystrixCommand;
 import com.netflix.hystrix.HystrixCommandGroupKey;
+import java.util.HashMap;
+import java.util.Map;
+import org.springframework.http.HttpEntity;
+import org.springframework.http.converter.json.MappingJackson2HttpMessageConverter;
+import org.springframework.util.LinkedMultiValueMap;
+import org.springframework.util.MultiValueMap;
 import org.springframework.web.client.RestTemplate;
 
 /**
@@ -38,6 +44,7 @@ public class PostMessageCommand extends HystrixCommand<PostMessageResponse> {
 
   @Override
   protected PostMessageResponse run() throws Exception {
+
     return restTemplate.postForObject(config.getUrl() + String.format(PATH, type, typeId), request,
         PostMessageResponse.class);
   }

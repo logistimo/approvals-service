@@ -1,5 +1,6 @@
 package com.logistimo.approval.models;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.databind.PropertyNamingStrategy;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
@@ -36,6 +37,7 @@ public class ApprovalRequest {
 
   private String message;
 
+  @JsonFormat(pattern = "yyyy-MM-dd hh:mm:ss")
   private Date expireAt;
 
   private Map<String, String> attributes;

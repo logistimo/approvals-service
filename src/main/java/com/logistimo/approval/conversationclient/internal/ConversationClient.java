@@ -3,8 +3,10 @@ package com.logistimo.approval.conversationclient.internal;
 import com.logistimo.approval.conversationclient.IConversationClient;
 import com.logistimo.approval.conversationclient.commands.PostMessageCommand;
 import com.logistimo.approval.conversationclient.config.ConversationClientConfig;
+import com.logistimo.approval.conversationclient.config.XConversationClientInterceptor;
 import com.logistimo.approval.conversationclient.request.PostMessageResponse;
 import com.logistimo.approval.conversationclient.response.PostMessageRequest;
+import java.util.Collections;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.web.client.RestTemplateBuilder;
 import org.springframework.stereotype.Service;
@@ -24,6 +26,7 @@ public class ConversationClient implements IConversationClient {
 
   protected ConversationClient(RestTemplateBuilder restTemplateBuilder) {
     restTemplate = restTemplateBuilder.build();
+    restTemplate.setInterceptors(Collections.singletonList(new XConversationClientInterceptor()));
   }
 
   @Override

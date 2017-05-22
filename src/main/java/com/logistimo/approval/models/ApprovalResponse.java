@@ -1,5 +1,6 @@
 package com.logistimo.approval.models;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
@@ -30,14 +31,17 @@ public class ApprovalResponse {
 
   private String message;
 
+  @JsonFormat(pattern = "yyyy-MM-dd hh:mm:ss")
   private Date expireAt;
 
   private Map<String, String> attributes;
 
   private List<Approver> approvers;
 
+  @JsonFormat(pattern = "yyyy-MM-dd hh:mm:ss")
   private Date createdAt;
 
+  @JsonFormat(pattern = "yyyy-MM-dd hh:mm:ss")
   private Date updatedAt;
 
 }
