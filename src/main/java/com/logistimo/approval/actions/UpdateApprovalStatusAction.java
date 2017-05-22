@@ -6,6 +6,7 @@ import static com.logistimo.approval.utils.Constants.*;
 import com.logistimo.approval.entity.Approval;
 import com.logistimo.approval.entity.ApprovalStatusHistory;
 import com.logistimo.approval.exception.BaseException;
+import com.logistimo.approval.models.ApprovalStatusUpdateMessage;
 import com.logistimo.approval.models.StatusUpdateRequest;
 import com.logistimo.approval.repository.IApprovalRepository;
 import com.logistimo.approval.repository.IApprovalStatusHistoryRepository;
@@ -61,8 +62,18 @@ public class UpdateApprovalStatusAction {
 
     approvalStatusHistoryRepository.save(newStatus);
 
-    jmsUtil.sendMessage("Message bhejungi");
+    publishApprovalStatusUpdateMessage(approval);
 
     return null;
+  }
+
+  private void publishApprovalStatusUpdateMessage(Approval approval) {
+    ApprovalStatusUpdateMessage message = new ApprovalStatusUpdateMessage();
+    message.setApprovalId(approval.getId());
+    message.setStatus(approval.getStatus());
+    message.setUpdatedBy(approval.getUpdatedBy());
+    message.setType(approval.getType());
+    message.setTypeId(approval.getTypeId());
+    jmsUtil.sendMessage(message);
   }
 }

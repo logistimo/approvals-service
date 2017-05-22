@@ -151,7 +151,7 @@ public class CreateApprovalAction {
 
 //    PostMessageRequest postMessageRequest = new PostMessageRequest();
 //    postMessageRequest.setData("This is my message.");
-//    conversationClient.postMessage(postMessageRequest, "Approval", approvalId);
+//    conversationClient.postMessage(postMessageRequest, "approval", approvalId);
 
     Approval approval = new Approval();
     approval.setId(approvalId);

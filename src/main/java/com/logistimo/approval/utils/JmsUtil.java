@@ -1,5 +1,6 @@
 package com.logistimo.approval.utils;
 
+import com.logistimo.approval.models.ApprovalStatusUpdateMessage;
 import org.apache.camel.Produce;
 import org.apache.camel.ProducerTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,7 +17,7 @@ public class JmsUtil {
   @Produce(uri = "jms:approval-status-update")
   ProducerTemplate producerTemplate;
 
-  public void sendMessage(String message) {
+  public void sendMessage(ApprovalStatusUpdateMessage message) {
     producerTemplate.sendBody(message);
   }
 
