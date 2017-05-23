@@ -6,6 +6,9 @@ package com.logistimo.approval.utils;
 public class Constants {
 
   public static final String APPROVAL_NOT_FOUND = "Approval with the id - %s not found.";
+  public static final String INVALID_STATUS_AND_EXPIRING_IN_COMBINATION = "The param - expiring_in can only be used with PENDING status.";
+  public static final String KEY_OR_VALUE_MISSING = "Either Attribute key or value is missing.";
+  public static final String APPROVER_ID_NOT_PRESENT = "The param - approver_status cannot be present without approver_id.";
 
   public static final String QUEUED_STATUS = "QUEUED";
   public static final String PENDING_STATUS = "PENDING";

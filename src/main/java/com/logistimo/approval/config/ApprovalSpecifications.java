@@ -74,9 +74,9 @@ public class ApprovalSpecifications {
     };
   }
 
-  public static Specification<Approval> withApproverStatus(String approverId,
-      String approverStatus) {
-    if (approverId == null || approverStatus == null) {
+  public static Specification<Approval> withApproverStatus(String approverStatus) {
+
+    if (approverStatus == null) {
       return null;
     }
 
@@ -91,8 +91,8 @@ public class ApprovalSpecifications {
 
   }
 
-  public static Specification<Approval> withApprovalKey(String key, String value) {
-    if (key == null || value == null) {
+  public static Specification<Approval> withApprovalKey(String key) {
+    if (key == null) {
       return null;
     }
 
@@ -106,8 +106,8 @@ public class ApprovalSpecifications {
     };
   }
 
-  public static Specification<Approval> withApprovalValue(String key, String value) {
-    if (key == null || value == null) {
+  public static Specification<Approval> withApprovalValue(String value) {
+    if (value == null) {
       return null;
     }
 
