@@ -1,5 +1,6 @@
 package com.logistimo.approval.actions;
 
+import static com.logistimo.approval.utils.Utility.getApprovalStatusHistories;
 import static junit.framework.TestCase.assertEquals;
 import static org.mockito.Mockito.when;
 
@@ -49,18 +50,5 @@ public class GetApprovalStatusHistoryActionTest {
     action.invoke("A456");
   }
 
-  private List<ApprovalStatusHistory> getApprovalStatusHistories() {
-    List<ApprovalStatusHistory> statusHistories = new ArrayList<>();
-    ApprovalStatusHistory history1 = new ApprovalStatusHistory();
-    history1.setApprovalId("A123");
-    history1.setStatus("PENDING");
-    history1.setUpdatedBy("U001");
-    statusHistories.add(history1);
-    ApprovalStatusHistory history2 = new ApprovalStatusHistory();
-    history1.setApprovalId("A123");
-    history1.setStatus("APPROVED");
-    history1.setUpdatedBy("U002");
-    statusHistories.add(history2);
-    return statusHistories;
-  }
+
 }

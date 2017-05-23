@@ -29,15 +29,14 @@ public class UpdateApprovalDomainMappingAction {
 
   public Void invoke(String approvalId, DomainUpdateRequest request) {
 
+    Approval approval = approvalRepository.findOne(approvalId);
+
+    if (approval == null) {
+      throw new BaseException(Response.SC_NOT_FOUND,
+          String.format(APPROVAL_NOT_FOUND, approvalId));
+    }
+
     if (!StringUtils.isEmpty(request.getSourceDomainId())) {
-
-      Approval approval = approvalRepository.findOne(approvalId);
-
-      if (approval == null) {
-        throw new BaseException(Response.SC_NOT_FOUND,
-            String.format(APPROVAL_NOT_FOUND, approvalId));
-      }
-
       approval.setSourceDomainId(request.getSourceDomainId());
       approvalRepository.save(approval);
     }
@@ -50,8 +49,8 @@ public class UpdateApprovalDomainMappingAction {
         domainMapping.setDomainId(domainId);
         approvalDomainMappingRepository.save(domainMapping);
       }
-
     }
     return null;
   }
+
 }
