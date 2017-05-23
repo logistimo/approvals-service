@@ -1,7 +1,10 @@
 package com.logistimo.approval.actions;
 
+import static com.logistimo.approval.utils.Utility.APPROVAL_ID;
 import static com.logistimo.approval.utils.Utility.getApprovalStatusHistories;
 import static junit.framework.TestCase.assertEquals;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 import com.logistimo.approval.entity.ApprovalStatusHistory;
@@ -36,18 +39,20 @@ public class GetApprovalStatusHistoryActionTest {
   @Before
   public void setUp() {
     MockitoAnnotations.initMocks(this);
-    when(statusHistoryRepository.findByApprovalId("A123")).thenReturn(getApprovalStatusHistories());
+    when(statusHistoryRepository.findByApprovalId(APPROVAL_ID)).thenReturn(getApprovalStatusHistories());
   }
 
   @Test
   public void getApprovalTest() {
-    List<StatusResponse> response = action.invoke("A123");
+    List<StatusResponse> response = action.invoke(APPROVAL_ID);
+    verify(statusHistoryRepository, times(1)).findByApprovalId(APPROVAL_ID);
     assertEquals(response.size(), 2);
   }
 
   @Test(expected = BaseException.class)
   public void getApprovalStatusHistoryThrowsExceptionTest() {
     action.invoke("A456");
+    verify(statusHistoryRepository, times(1)).findByApprovalId(APPROVAL_ID);
   }
 
 

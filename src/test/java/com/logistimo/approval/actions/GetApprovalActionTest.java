@@ -32,7 +32,6 @@ import org.springframework.test.context.junit4.SpringRunner;
 @RunWith(SpringRunner.class)
 public class GetApprovalActionTest {
 
-  public static final String APPROVAL_ID = "A123";
   @Mock
   private IApprovalRepository approvalRepository;
 
@@ -54,7 +53,7 @@ public class GetApprovalActionTest {
     when(approvalRepository.findOne(APPROVAL_ID)).thenReturn(getApproval());
     when(approverQueueRepository.findByApprovalId(APPROVAL_ID)).thenReturn(getApproverQueue());
     when(attributesRepository.findByApprovalId(APPROVAL_ID)).thenReturn(getApprovalAttributes());
-    when(domainMappingRepository.findByApprovalId(APPROVAL_ID))z.thenReturn(getApprovalDomainMappings());
+    when(domainMappingRepository.findByApprovalId(APPROVAL_ID)).thenReturn(getApprovalDomainMappings());
   }
 
   @Test

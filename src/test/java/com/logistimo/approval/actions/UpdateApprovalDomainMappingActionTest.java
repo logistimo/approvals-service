@@ -26,8 +26,6 @@ import org.mockito.MockitoAnnotations;
 
 public class UpdateApprovalDomainMappingActionTest {
 
-  public static final String APPROVAL_ID = "A123";
-
   @Mock
   private IApprovalRepository approvalRepository;
 

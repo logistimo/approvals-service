@@ -18,6 +18,8 @@ import java.util.List;
 
 public class Utility {
 
+  public static final String APPROVAL_ID = "A123";
+
   public static List<ApprovalAttributes> getApprovalAttributes() {
     ApprovalAttributes attribute1 = new ApprovalAttributes();
     attribute1.setApprovalId("A123");
