@@ -47,6 +47,7 @@ public class UpdateApprovalDomainMappingActionTest {
   public void updateApprovalDomainMappingTest() {
     DomainUpdateRequest request = getDomainUpdateRequest();
     action.invoke(APPROVAL_ID, request);
+    verify(approvalRepository, times(1)).findOne(APPROVAL_ID);
     verify(approvalRepository, times(1)).save(any(Approval.class));
     verify(approvalDomainMappingRepository, times(1)).deleteByApprovalId(APPROVAL_ID);
     verify(approvalDomainMappingRepository, times(request.getDomains().size()))
@@ -56,5 +57,6 @@ public class UpdateApprovalDomainMappingActionTest {
   @Test(expected = BaseException.class)
   public void updateApprovalDomainMappingThrowsExceptionTest() throws IOException {
     action.invoke("A456", getDomainUpdateRequest());
+    verify(approvalRepository, times(1)).findOne(APPROVAL_ID);
   }
 }

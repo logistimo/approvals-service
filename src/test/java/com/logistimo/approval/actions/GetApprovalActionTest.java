@@ -1,6 +1,5 @@
 package com.logistimo.approval.actions;
 
-import com.logistimo.approval.entity.Approval;
 import com.logistimo.approval.exception.BaseException;
 import com.logistimo.approval.models.ApprovalResponse;
 import com.logistimo.approval.repository.IApprovalAttributesRepository;
@@ -16,7 +15,6 @@ import org.mockito.MockitoAnnotations;
 
 import static com.logistimo.approval.utils.Utility.*;
 import static junit.framework.TestCase.assertEquals;
-import static org.mockito.Matchers.any;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
