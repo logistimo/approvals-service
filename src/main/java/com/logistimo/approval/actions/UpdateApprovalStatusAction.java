@@ -6,13 +6,14 @@ import static com.logistimo.approval.utils.Constants.*;
 import com.logistimo.approval.entity.Approval;
 import com.logistimo.approval.entity.ApprovalStatusHistory;
 import com.logistimo.approval.exception.BaseException;
-import com.logistimo.approval.models.ApprovalStatusUpdateMessage;
+import com.logistimo.approval.models.ApprovalStatusUpdateEvent;
 import com.logistimo.approval.models.StatusUpdateRequest;
 import com.logistimo.approval.repository.IApprovalRepository;
 import com.logistimo.approval.repository.IApprovalStatusHistoryRepository;
 import com.logistimo.approval.utils.JmsUtil;
 import java.util.Date;
 import org.apache.catalina.connector.Response;
+import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -27,7 +28,7 @@ public class UpdateApprovalStatusAction {
   private IApprovalRepository approvalRepository;
 
   @Autowired
-  private IApprovalStatusHistoryRepository approvalStatusHistoryRepository;
+  private IApprovalStatusHistoryRepository statusHistoryRepository;
 
 
   @Autowired
@@ -47,28 +48,30 @@ public class UpdateApprovalStatusAction {
 
     Date now = new Date();
 
-    ApprovalStatusHistory lastStatus = approvalStatusHistoryRepository
-        .findLastUpdateByApprovalId(approvalId);
+    ApprovalStatusHistory lastStatus = statusHistoryRepository.findLastUpdateByApprovalId(approvalId);
     lastStatus.setEndTime(now);
+    statusHistoryRepository.save(lastStatus);
 
-    approvalStatusHistoryRepository.save(lastStatus);
-
-    ApprovalStatusHistory newStatus = new ApprovalStatusHistory();
-    newStatus.setApprovalId(approvalId);
-    newStatus.setStatus(request.getStatus());
-    newStatus.setMessageId(request.getMessageId());
-    newStatus.setUpdatedBy(request.getUpdatedBy());
-    newStatus.setStartTime(now);
-
-    approvalStatusHistoryRepository.save(newStatus);
+    statusHistoryRepository.save(getNewStatusHistory(approvalId, request, now));
 
     publishApprovalStatusUpdateMessage(approval);
 
     return null;
   }
 
+  private ApprovalStatusHistory getNewStatusHistory(String approvalId, StatusUpdateRequest request,
+      Date now) {
+    ApprovalStatusHistory newStatus = new ApprovalStatusHistory();
+    newStatus.setApprovalId(approvalId);
+    newStatus.setStatus(request.getStatus());
+    newStatus.setMessageId(request.getMessageId());
+    newStatus.setUpdatedBy(request.getUpdatedBy());
+    newStatus.setStartTime(now);
+    return newStatus;
+  }
+
   private void publishApprovalStatusUpdateMessage(Approval approval) {
-    ApprovalStatusUpdateMessage message = new ApprovalStatusUpdateMessage();
+    ApprovalStatusUpdateEvent message = new ApprovalStatusUpdateEvent();
     message.setApprovalId(approval.getId());
     message.setStatus(approval.getStatus());
     message.setUpdatedBy(approval.getUpdatedBy());
