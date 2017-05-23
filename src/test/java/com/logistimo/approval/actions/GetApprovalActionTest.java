@@ -1,5 +1,6 @@
 package com.logistimo.approval.actions;
 
+import com.logistimo.approval.entity.Approval;
 import com.logistimo.approval.exception.BaseException;
 import com.logistimo.approval.models.ApprovalResponse;
 import com.logistimo.approval.repository.IApprovalAttributesRepository;
@@ -15,6 +16,9 @@ import org.mockito.MockitoAnnotations;
 
 import static com.logistimo.approval.utils.Utility.*;
 import static junit.framework.TestCase.assertEquals;
+import static org.mockito.Matchers.any;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 import org.springframework.boot.test.context.SpringBootTest;
@@ -28,6 +32,7 @@ import org.springframework.test.context.junit4.SpringRunner;
 @RunWith(SpringRunner.class)
 public class GetApprovalActionTest {
 
+  public static final String APPROVAL_ID = "A123";
   @Mock
   private IApprovalRepository approvalRepository;
 
@@ -35,10 +40,10 @@ public class GetApprovalActionTest {
   private IApproverQueueRepository approverQueueRepository;
 
   @Mock
-  private IApprovalAttributesRepository approvalAttributesRepository;
+  private IApprovalAttributesRepository attributesRepository;
 
   @Mock
-  private IApprovalDomainMappingRepository approvalDomainMappingRepository;
+  private IApprovalDomainMappingRepository domainMappingRepository;
 
   @InjectMocks
   private GetApprovalAction action;
@@ -46,17 +51,19 @@ public class GetApprovalActionTest {
   @Before
   public void setUp() {
     MockitoAnnotations.initMocks(this);
-    when(approvalRepository.findOne("A123")).thenReturn(getApproval());
-    when(approverQueueRepository.findByApprovalId("A123")).thenReturn(getApproverQueue());
-    when(approvalAttributesRepository.findByApprovalId("A123")).thenReturn(getApprovalAttributes());
-    when(approvalDomainMappingRepository.findByApprovalId("A123"))
-        .thenReturn(getApprovalDomainMappings());
-
+    when(approvalRepository.findOne(APPROVAL_ID)).thenReturn(getApproval());
+    when(approverQueueRepository.findByApprovalId(APPROVAL_ID)).thenReturn(getApproverQueue());
+    when(attributesRepository.findByApprovalId(APPROVAL_ID)).thenReturn(getApprovalAttributes());
+    when(domainMappingRepository.findByApprovalId(APPROVAL_ID))z.thenReturn(getApprovalDomainMappings());
   }
 
   @Test
   public void getApprovalTest() {
-    ApprovalResponse response = action.invoke("A123");
+    ApprovalResponse response = action.invoke(APPROVAL_ID);
+    verify(approvalRepository, times(1)).findOne(APPROVAL_ID);
+    verify(approverQueueRepository, times(1)).findByApprovalId(APPROVAL_ID);
+    verify(attributesRepository, times(1)).findByApprovalId(APPROVAL_ID);
+    verify(domainMappingRepository, times(1)).findByApprovalId(APPROVAL_ID);
     assertEquals(response.getApprovers().size(), 1);
     assertEquals(response.getDomains().size(), 1);
     assertEquals(response.getAttributes().size(), 1);
@@ -65,6 +72,7 @@ public class GetApprovalActionTest {
   @Test(expected = BaseException.class)
   public void getApprovalThrowsExceptionTest() {
     action.invoke("A456");
+    verify(approvalRepository, times(1)).findOne(APPROVAL_ID);
   }
 
 }

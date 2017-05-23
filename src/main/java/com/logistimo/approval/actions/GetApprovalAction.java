@@ -37,10 +37,10 @@ public class GetApprovalAction {
   private IApproverQueueRepository approverQueueRepository;
 
   @Autowired
-  private IApprovalAttributesRepository approvalAttributesRepository;
+  private IApprovalAttributesRepository attributesRepository;
 
   @Autowired
-  private IApprovalDomainMappingRepository approvalDomainMappingRepository;
+  private IApprovalDomainMappingRepository domainMappingRepository;
 
   private ModelMapper mapper = new ModelMapper();
 
@@ -73,8 +73,7 @@ public class GetApprovalAction {
   }
 
   private void setApprovalDomains(String approvalId, ApprovalResponse response) {
-    List<ApprovalDomainMapping> domainMappings = approvalDomainMappingRepository
-        .findByApprovalId(approvalId);
+    List<ApprovalDomainMapping> domainMappings = domainMappingRepository.findByApprovalId(approvalId);
     if (!CollectionUtils.isEmpty(domainMappings)) {
       List<Long> domains = new ArrayList<>();
       for (ApprovalDomainMapping domainMapping : domainMappings) {
@@ -85,8 +84,7 @@ public class GetApprovalAction {
   }
 
   private void setApprovalAttributes(String approvalId, ApprovalResponse response) {
-    List<ApprovalAttributes> approvalAttributes = approvalAttributesRepository
-        .findByApprovalId(approvalId);
+    List<ApprovalAttributes> approvalAttributes = attributesRepository.findByApprovalId(approvalId);
     if (!CollectionUtils.isEmpty(approvalAttributes)) {
       Map<String, String> attributes = new HashMap<>();
       for (ApprovalAttributes approvalAttribute : approvalAttributes) {
