@@ -1,6 +1,7 @@
 package com.logistimo.approval.actions;
 
 import com.logistimo.approval.conversationclient.IConversationClient;
+import com.logistimo.approval.conversationclient.request.PostMessageResponse;
 import com.logistimo.approval.conversationclient.response.PostMessageRequest;
 import com.logistimo.approval.entity.Approval;
 import com.logistimo.approval.entity.ApprovalAttributes;
@@ -73,15 +74,25 @@ public class CreateApprovalAction {
       }
     }
 
-    Approval approval = getApproval(request);
+    String approvalId = UUID.randomUUID().toString().replace("-", "");
+
+    PostMessageResponse postMessageResponse = createConversation(approvalId, request);
+
+    Approval approval = getApproval(approvalId, request, postMessageResponse.getConversationId());
     Approval approvalFromDB = approvalRepository.save(approval);
 
-    createApprovalStatusHistory(approval);
-    createApproversQueue(request, approval);
-    createApprovalAttributes(request, approval);
-    createApprovalDomainMapping(request, approval);
+    createApprovalStatusHistory(approval, postMessageResponse.getMessageId());
+    createApproversQueue(approvalId,request);
+    createApprovalAttributes(approvalId, request);
+    createApprovalDomainMapping(approvalId, request);
 
     return generateResponse(request, approvalFromDB);
+  }
+
+  private PostMessageResponse createConversation(String approvalId, ApprovalRequest request) {
+    PostMessageRequest postMessageRequest = new PostMessageRequest(request.getMessage(),
+        request.getRequesterId(), request.getSourceDomainId());
+    return conversationClient.postMessage(postMessageRequest, "APPROVAL", approvalId);
   }
 
   private ApprovalResponse generateResponse(ApprovalRequest request, Approval approval) {
@@ -94,25 +105,26 @@ public class CreateApprovalAction {
     response.setStatus(approval.getStatus());
     response.setCreatedAt(approval.getCreatedAt());
     response.setUpdatedAt(approval.getUpdatedAt());
+
     return response;
   }
 
-  private void createApprovalDomainMapping(ApprovalRequest request, Approval approval) {
+  private void createApprovalDomainMapping(String approvalId, ApprovalRequest request) {
     if (!CollectionUtils.isEmpty(request.getDomains())) {
       for (Long domainId : request.getDomains()) {
         ApprovalDomainMapping domainMapping = new ApprovalDomainMapping();
-        domainMapping.setApprovalId(approval.getId());
+        domainMapping.setApprovalId(approvalId);
         domainMapping.setDomainId(domainId);
         approvalDomainMappingRepository.save(domainMapping);
       }
     }
   }
 
-  private void createApprovalAttributes(ApprovalRequest request, Approval approval) {
+  private void createApprovalAttributes(String approvalId, ApprovalRequest request) {
     if (!CollectionUtils.isEmpty(request.getAttributes())) {
       for (String attributeKey : request.getAttributes().keySet()) {
         ApprovalAttributes approvalAttribute = new ApprovalAttributes();
-        approvalAttribute.setApprovalId(approval.getId());
+        approvalAttribute.setApprovalId(approvalId);
         approvalAttribute.setKey(attributeKey);
         approvalAttribute.setValue(request.getAttributes().get(attributeKey));
         approvalAttributesRepository.save(approvalAttribute);
@@ -120,11 +132,11 @@ public class CreateApprovalAction {
     }
   }
 
-  private void createApproversQueue(ApprovalRequest request, Approval approval) {
+  private void createApproversQueue(String approvalId, ApprovalRequest request) {
     if (!CollectionUtils.isEmpty(request.getApprovers())) {
       for (Approver approver : request.getApprovers()) {
         ApproverQueue approverQueue = new ApproverQueue();
-        approverQueue.setApprovalId(approval.getId());
+        approverQueue.setApprovalId(approvalId);
         approverQueue.setUserId(approver.getUserId());
         approverQueue.setStartTime(approver.getStartTime());
         approverQueue.setEndTime(approver.getEndTime());
@@ -134,25 +146,16 @@ public class CreateApprovalAction {
     }
   }
 
-  private void createApprovalStatusHistory(Approval approval) {
+  private void createApprovalStatusHistory(Approval approval, String messageId) {
     ApprovalStatusHistory approvalStatusHistory = new ApprovalStatusHistory();
     approvalStatusHistory.setApprovalId(approval.getId());
     approvalStatusHistory.setStatus(approval.getStatus());
     approvalStatusHistory.setUpdatedBy(approval.getRequesterId());
-//    Set the message id as the id of the message received
-//    approvalStatusHistory.setMessageId();
+    approvalStatusHistory.setMessageId(messageId);
     approvalStatusHistoryRepository.save(approvalStatusHistory);
   }
 
-  private Approval getApproval(ApprovalRequest request) {
-
-    String approvalId = UUID.randomUUID().toString().replace("-", "");
-
-    String conversationId = "C123";
-
-//    PostMessageRequest postMessageRequest = new PostMessageRequest();
-//    postMessageRequest.setData("This is my message.");
-//    conversationClient.postMessage(postMessageRequest, "approval", approvalId);
+  private Approval getApproval(String approvalId, ApprovalRequest request, String conversationId) {
 
     Approval approval = new Approval();
     approval.setId(approvalId);

@@ -1,5 +1,6 @@
 package com.logistimo.approval.conversationclient.response;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Data;
 
 /**
@@ -9,5 +10,18 @@ import lombok.Data;
 @Data
 public class PostMessageRequest {
 
-  String data;
+  @JsonProperty("data")
+  private String data;
+
+  @JsonProperty("userId")
+  private String userId;
+
+  @JsonProperty("domainId")
+  private Long domainId;
+
+  public PostMessageRequest(String data, String userId, Long domainId) {
+    this.data = data;
+    this.userId = userId;
+    this.domainId = domainId;
+  }
 }

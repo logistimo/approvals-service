@@ -29,7 +29,7 @@ public class PostMessageCommand extends HystrixCommand<PostMessageResponse> {
 
   private ConversationClientConfig config;
 
-  private static final String PATH = "/s2/api/conversation/message/%s/%s";
+  private static final String PATH = "/s2/api/conversation/add_message/%s/%s";
   private static final String GROUP_KEY = "Conversation-Service";
 
   public PostMessageCommand(RestTemplate restTemplate, ConversationClientConfig config,
