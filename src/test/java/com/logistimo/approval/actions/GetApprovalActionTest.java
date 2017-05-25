@@ -67,7 +67,7 @@ public class GetApprovalActionTest {
   }
 
   @Test(expected = BaseException.class)
-  public void getApprovalThrowsExceptionTest() {
+  public void approvalNotFound() {
     action.invoke("A456");
     verify(approvalRepository, times(1)).findOne(APPROVAL_ID);
   }

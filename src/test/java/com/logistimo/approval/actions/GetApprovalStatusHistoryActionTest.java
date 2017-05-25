@@ -41,14 +41,14 @@ public class GetApprovalStatusHistoryActionTest {
   }
 
   @Test
-  public void getApprovalTest() {
+  public void getApprovalStatusHistoryTest() {
     List<StatusResponse> response = action.invoke(APPROVAL_ID);
     verify(statusHistoryRepository, times(1)).findByApprovalId(APPROVAL_ID);
     assertEquals(response.size(), 2);
   }
 
   @Test(expected = BaseException.class)
-  public void getApprovalStatusHistoryThrowsExceptionTest() {
+  public void approvalNotFound() {
     action.invoke("A456");
     verify(statusHistoryRepository, times(1)).findByApprovalId(APPROVAL_ID);
   }

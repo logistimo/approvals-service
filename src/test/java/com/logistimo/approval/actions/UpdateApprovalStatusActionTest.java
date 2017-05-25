@@ -73,7 +73,7 @@ public class UpdateApprovalStatusActionTest {
   }
 
   @Test(expected = BaseException.class)
-  public void updateApprovalStatusActionThrowsExceptionTest() throws IOException {
+  public void approvalNotFound() throws IOException {
     action.invoke("A456", getStatusUpdateRequest());
     verify(approvalRepository, times(1)).findOne(APPROVAL_ID);
   }

@@ -5,6 +5,8 @@ import com.logistimo.approval.entity.ApprovalAttributes;
 import com.logistimo.approval.entity.ApprovalDomainMapping;
 import com.logistimo.approval.entity.ApprovalStatusHistory;
 import com.logistimo.approval.entity.ApproverQueue;
+import com.logistimo.approval.models.ApprovalRequest;
+import com.logistimo.approval.models.Approver;
 import com.logistimo.approval.models.DomainUpdateRequest;
 import com.logistimo.approval.models.StatusUpdateRequest;
 import java.util.ArrayList;
@@ -58,9 +60,25 @@ public class Utility {
     approval.setExpireAt(new Date(2017, 06, 12, 16, 53, 24));
     approval.setCreatedAt(new Date(2017, 05, 12, 16, 53, 24));
     approval.setUpdatedAt(new Date(2017, 05, 12, 16, 53, 24));
-    approval.setRequesterId("R001");
     return approval;
   }
+
+  public static Approval getApprovalFromDB() {
+    Approval approval = new Approval();
+    approval.setId("A789");
+    approval.setType("order");
+    approval.setTypeId("O002");
+    approval.setStatus("PENDING");
+    approval.setRequesterId("R002");
+    approval.setSourceDomainId(2L);
+    approval.setConversationId("C001");
+    approval.setUpdatedBy("R002");
+    approval.setExpireAt(new Date(2017, 06, 12, 16, 53, 24));
+    approval.setCreatedAt(new Date(2017, 05, 12, 16, 53, 24));
+    approval.setUpdatedAt(new Date(2017, 05, 12, 16, 53, 24));
+    return approval;
+  }
+
 
   public static List<ApprovalStatusHistory> getApprovalStatusHistories() {
     List<ApprovalStatusHistory> statusHistories = new ArrayList<>();
@@ -98,6 +116,21 @@ public class Utility {
     statusHistory.setStatus("PENDING");
     statusHistory.setUpdatedBy("R001");
     return statusHistory;
+  }
+
+  public static ApprovalRequest getApprovalRequest() {
+    ApprovalRequest request = new ApprovalRequest();
+    request.setType("order");
+    request.setTypeId("O002");
+    request.setRequesterId("R002");
+    request.setSourceDomainId(2L);
+    request.setMessage("This is a message.");
+    request.setAttributes(Collections.singletonMap("kioskId", "K002"));
+    Approver approver = new Approver();
+    approver.setUserId("U002");
+    request.setApprovers(Collections.singletonList(approver));
+    request.setDomains(Arrays.asList(4L, 5L));
+    return request;
   }
 
 }

@@ -101,6 +101,7 @@ public class CreateApprovalAction {
     mapper.getConfiguration().setAmbiguityIgnored(true);
 
     ApprovalResponse response = mapper.map(request, ApprovalResponse.class);
+    response.setConversationId(approval.getConversationId());
     response.setApprovalId(approval.getId());
     response.setStatus(approval.getStatus());
     response.setCreatedAt(approval.getCreatedAt());

@@ -55,7 +55,7 @@ public class UpdateApprovalDomainMappingActionTest {
   }
 
   @Test(expected = BaseException.class)
-  public void updateApprovalDomainMappingThrowsExceptionTest() throws IOException {
+  public void approvalNotFound() throws IOException {
     action.invoke("A456", getDomainUpdateRequest());
     verify(approvalRepository, times(1)).findOne(APPROVAL_ID);
   }
