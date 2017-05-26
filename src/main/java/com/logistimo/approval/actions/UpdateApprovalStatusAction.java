@@ -13,7 +13,6 @@ import com.logistimo.approval.repository.IApprovalStatusHistoryRepository;
 import com.logistimo.approval.utils.JmsUtil;
 import java.util.Date;
 import org.apache.catalina.connector.Response;
-import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 

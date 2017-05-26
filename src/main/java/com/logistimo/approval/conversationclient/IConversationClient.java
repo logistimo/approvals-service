@@ -2,7 +2,6 @@ package com.logistimo.approval.conversationclient;
 
 import com.logistimo.approval.conversationclient.request.PostMessageResponse;
 import com.logistimo.approval.conversationclient.response.PostMessageRequest;
-import org.springframework.stereotype.Component;
 
 /**
  * Created by nitisha.khandelwal on 15/05/17.

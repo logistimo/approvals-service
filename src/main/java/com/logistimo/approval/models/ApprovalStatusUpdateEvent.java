@@ -2,7 +2,6 @@ package com.logistimo.approval.models;
 
 import javax.validation.constraints.NotNull;
 import lombok.Data;
-import lombok.Setter;
 
 /**
  * Created by nitisha.khandelwal on 22/05/17.
