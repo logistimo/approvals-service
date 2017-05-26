@@ -1,10 +1,9 @@
 buildscript {
-    ext {
-        springBootVersion = '1.5.3.RELEASE'
-    }
+
     repositories {
         mavenCentral()
     }
+
     dependencies {
         classpath("org.springframework.boot:spring-boot-gradle-plugin:${springBootVersion}")
     }
@@ -13,7 +12,6 @@ buildscript {
 apply plugin: 'java'
 apply plugin: 'org.springframework.boot'
 
-version = '0.0.1-SNAPSHOT'
 sourceCompatibility = 1.8
 
 repositories {
@@ -29,20 +27,22 @@ springBoot {
 dependencies {
 
     compile 'org.springframework.boot:spring-boot-starter'
+
     compile 'org.springframework.boot:spring-boot-starter-web'
 
     compile 'org.springframework.boot:spring-boot-starter-data-jpa'
-    compile 'org.mariadb.jdbc:mariadb-java-client:1.5.9'
 
-    compile 'org.projectlombok:lombok:1.16.6'
+    compile 'org.mariadb.jdbc:mariadb-java-client:' + mariaDbClientVersion
 
-    compile 'org.modelmapper:modelmapper:0.6.3'
+    compile 'org.projectlombok:lombok:' + lombokVersion
 
-    compile 'com.netflix.hystrix:hystrix-core:1.5.10'
+    compile 'org.modelmapper:modelmapper:' + modelMapperVersion
 
-    compile 'org.apache.camel:camel-spring-boot-starter:2.17.0'
+    compile 'com.netflix.hystrix:hystrix-core:' + hystrixVersion
 
-    compile 'org.apache.activemq:activemq-camel:5.13.2'
+    compile 'org.apache.camel:camel-spring-boot-starter:' + camelVersion
 
-    testCompile('org.springframework.boot:spring-boot-starter-test')
+    compile 'org.apache.activemq:activemq-camel:' + activeMQVersion
+
+    testCompile 'org.springframework.boot:spring-boot-starter-test'
 }
