@@ -25,10 +25,11 @@ public class PostMessageCommand extends HystrixCommand<PostMessageResponse> {
 
   private static final String PATH = "/s2/api/conversation/add_message/%s/%s";
   private static final String GROUP_KEY = "Conversation-Service";
+  private static final int TIMEOUT_IN_MILLISECONDS = 60000;
 
   public PostMessageCommand(RestTemplate restTemplate, ConversationClientConfig config,
       PostMessageRequest request, String type, String typeId) {
-    super(HystrixCommandGroupKey.Factory.asKey(GROUP_KEY), 60000);
+    super(HystrixCommandGroupKey.Factory.asKey(GROUP_KEY), TIMEOUT_IN_MILLISECONDS);
     this.restTemplate = restTemplate;
     this.config = config;
     this.request = request;
