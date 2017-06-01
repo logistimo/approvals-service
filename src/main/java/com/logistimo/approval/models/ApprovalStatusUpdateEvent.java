@@ -1,5 +1,6 @@
 package com.logistimo.approval.models;
 
+import java.io.Serializable;
 import javax.validation.constraints.NotNull;
 import lombok.Data;
 
@@ -8,7 +9,7 @@ import lombok.Data;
  */
 
 @Data
-public class ApprovalStatusUpdateEvent {
+public class ApprovalStatusUpdateEvent implements Serializable {
 
   @NotNull
   private String approvalId;
