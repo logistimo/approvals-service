@@ -13,7 +13,7 @@ import org.springframework.http.client.ClientHttpResponse;
 
 public class XConversationClientInterceptor implements ClientHttpRequestInterceptor {
 
-  private static final String HEADER_NAME = "app-name";
+  private static final String HEADER_NAME = "X-AppEngine-TaskName";
   private static final String HEADER_VALUE = "approvals";
 
   @Override
