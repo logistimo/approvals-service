@@ -9,6 +9,7 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
+import javax.persistence.Version;
 import lombok.Data;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
@@ -49,6 +50,10 @@ public class Approval {
 
   @Column(name = "expire_at")
   private Date expireAt;
+
+  @Version
+  @Column(name = "version")
+  private Long version;
 
   @CreationTimestamp
   @Column(name = "created_at", nullable = false, updatable = false)

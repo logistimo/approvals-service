@@ -7,6 +7,7 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Table;
+import javax.persistence.Version;
 import lombok.Data;
 import org.hibernate.annotations.CreationTimestamp;
 
@@ -42,4 +43,8 @@ public class ApprovalStatusHistory {
 
   @Column(name = "end_time")
   private Date endTime;
+
+  @Version
+  @Column(name = "version")
+  private Long version;
 }
