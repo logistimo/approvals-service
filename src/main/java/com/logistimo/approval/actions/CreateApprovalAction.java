@@ -1,5 +1,7 @@
 package com.logistimo.approval.actions;
 
+import static com.logistimo.approval.utils.Constants.PENDING_OR_APPROVED_STATUS;
+
 import com.logistimo.approval.conversationclient.IConversationClient;
 import com.logistimo.approval.conversationclient.request.PostMessageResponse;
 import com.logistimo.approval.conversationclient.response.PostMessageRequest;
@@ -61,17 +63,12 @@ public class CreateApprovalAction {
 
     log.info("Inside the CreateApprovalAction with request - {}", request);
 
-    List<Approval> approvals = approvalRepository.findByTypeAndTypeId(request.getType(),
-        request.getTypeId());
+    List<Approval> approvals = approvalRepository
+        .findApprovedOrPendingApprovalsByTypeAndTypeId(request.getType(), request.getTypeId());
 
     if (!CollectionUtils.isEmpty(approvals)) {
-      for (Approval approval : approvals) {
-        if (Constants.PENDING_STATUS.equalsIgnoreCase(approval.getStatus()) ||
-            Constants.APPROVED_STATUS.equalsIgnoreCase(approval.getStatus())) {
-          throw new BaseException(Response.SC_BAD_REQUEST, String.format(APPROVAL_ALREADY_EXITS,
-              approval.getType(), approval.getTypeId(), approval.getStatus()));
-        }
-      }
+      throw new BaseException(Response.SC_BAD_REQUEST, String.format(APPROVAL_ALREADY_EXITS,
+          request.getType(), request.getTypeId(), PENDING_OR_APPROVED_STATUS));
     }
 
     String approvalId = UUID.randomUUID().toString().replace("-", "");
@@ -82,7 +79,7 @@ public class CreateApprovalAction {
     Approval approvalFromDB = approvalRepository.save(approval);
 
     createApprovalStatusHistory(approval, postMessageResponse.getMessageId());
-    createApproversQueue(approvalId,request);
+    createApproversQueue(approvalId, request);
     createApprovalAttributes(approvalId, request);
     createApprovalDomainMapping(approvalId, request);
 

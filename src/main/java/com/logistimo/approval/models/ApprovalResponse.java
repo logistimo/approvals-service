@@ -1,7 +1,9 @@
 package com.logistimo.approval.models;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import lombok.Data;
@@ -27,14 +29,14 @@ public class ApprovalResponse {
 
   private Long sourceDomainId;
 
-  private List<Long> domains;
+  private List<Long> domains = new ArrayList<>();
 
   @JsonFormat(pattern = "yyyy-MM-dd hh:mm:ss")
   private Date expireAt;
 
-  private Map<String, String> attributes;
+  private Map<String, String> attributes = new HashMap<>();
 
-  private List<Approver> approvers;
+  private List<Approver> approvers = new ArrayList<>();
 
   @JsonFormat(pattern = "yyyy-MM-dd hh:mm:ss")
   private Date createdAt;

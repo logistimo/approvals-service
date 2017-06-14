@@ -78,9 +78,12 @@ public class CreateApprovalActionTest {
 
   @Test
   public void createApprovalTest() {
+
     ApprovalRequest request = getApprovalRequest();
     ApprovalResponse response = action.invoke(getApprovalRequest());
-    verify(approvalRepository, times(1)).findByTypeAndTypeId(anyString(), anyString());
+
+    verify(approvalRepository, times(1))
+        .findApprovedOrPendingApprovalsByTypeAndTypeId(anyString(), anyString());
     verify(approvalAttributesRepository, times(request.getAttributes().size()))
         .save(any(ApprovalAttributes.class));
     verify(approvalDomainMappingRepository, times(request.getDomains().size()))
@@ -90,6 +93,7 @@ public class CreateApprovalActionTest {
 
     final ArgumentCaptor<PostMessageRequest> captor = ArgumentCaptor
         .forClass(PostMessageRequest.class);
+
     verify(conversationClient, times(1)).postMessage(captor.capture(), anyString(), anyString());
     assertEquals(captor.getValue().getData(), request.getMessage());
     assertEquals(captor.getValue().getDomainId(), request.getSourceDomainId());
@@ -117,11 +121,12 @@ public class CreateApprovalActionTest {
     request.setType("order");
     request.setTypeId("O001");
 
-    when(approvalRepository.findByTypeAndTypeId("order", "O001"))
+    when(approvalRepository.findApprovedOrPendingApprovalsByTypeAndTypeId("order", "O001"))
         .thenReturn(Collections.singletonList(getApproval()));
 
     action.invoke(request);
 
-    verify(approvalRepository, times(1)).findByTypeAndTypeId(anyString(), anyString());
+    verify(approvalRepository, times(1))
+        .findApprovedOrPendingApprovalsByTypeAndTypeId(anyString(), anyString());
   }
 }

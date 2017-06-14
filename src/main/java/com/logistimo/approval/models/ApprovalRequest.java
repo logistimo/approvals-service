@@ -5,6 +5,7 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
+import javax.validation.constraints.Future;
 import javax.validation.constraints.NotNull;
 import lombok.Data;
 
@@ -16,13 +17,13 @@ import lombok.Data;
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class ApprovalRequest {
 
-  @NotNull
+  @NotNull(message = "error.type.notnull")
   private String type;
 
-  @NotNull
+  @NotNull(message = "error.typeId.notnull")
   private String typeId;
 
-  @NotNull
+  @NotNull(message = "error.requesterId.notnull")
   private String requesterId;
 
   private Long sourceDomainId;
@@ -31,11 +32,11 @@ public class ApprovalRequest {
 
   private String message;
 
+  @Future
   @JsonFormat(pattern = "yyyy-MM-dd hh:mm:ss")
   private Date expireAt;
 
   private Map<String, String> attributes;
 
   private List<Approver> approvers;
-
 }

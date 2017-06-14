@@ -7,12 +7,14 @@ import com.logistimo.approval.actions.GetFilteredApprovalsAction;
 import com.logistimo.approval.actions.UpdateApprovalDomainMappingAction;
 import com.logistimo.approval.actions.UpdateApprovalStatusAction;
 import com.logistimo.approval.entity.Approval;
+import com.logistimo.approval.models.ApprovalFilters;
 import com.logistimo.approval.models.ApprovalRequest;
 import com.logistimo.approval.models.ApprovalResponse;
 import com.logistimo.approval.models.DomainUpdateRequest;
 import com.logistimo.approval.models.StatusUpdateRequest;
 import com.logistimo.approval.models.StatusResponse;
 import java.util.List;
+import javax.validation.Valid;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
@@ -57,28 +59,9 @@ public class ApprovalV1Controller {
   }
 
   @ResponseBody
-  @ResponseStatus(value = HttpStatus.OK)
-  @RequestMapping(method = RequestMethod.GET)
-  public Page<Approval> getApprovals(
-      @RequestParam(value = "offset") int offset, @RequestParam(value = "size") int size,
-      @RequestParam(value = "requester_id", required = false) String requesterId,
-      @RequestParam(value = "status", required = false) String status,
-      @RequestParam(value = "expiring_in", required = false) String expiringInMinutes,
-      @RequestParam(value = "approver_id", required = false) String approverId,
-      @RequestParam(value = "approver_status", required = false) String approverStatus,
-      @RequestParam(value = "type", required = false) String type,
-      @RequestParam(value = "type_id", required = false) String typeId,
-      @RequestParam(value = "ordered_by", required = false) String orderedBy,
-      @RequestParam(value = "attribute_key", required = false) String attributeKey,
-      @RequestParam(value = "attribute_value", required = false) String attributeValue) {
-    return getFilteredApprovalsAction.invoke(offset, size, requesterId, status, expiringInMinutes,
-        approverId, approverStatus, type, typeId, orderedBy, attributeKey, attributeValue);
-  }
-
-  @ResponseBody
   @ResponseStatus(value = HttpStatus.CREATED)
   @RequestMapping(path = "/", method = RequestMethod.POST)
-  public ApprovalResponse createApproval(@RequestBody ApprovalRequest request) {
+  public ApprovalResponse createApproval(@Valid @RequestBody ApprovalRequest request) {
     return createApprovalAction.invoke(request);
   }
 
@@ -89,7 +72,6 @@ public class ApprovalV1Controller {
       @PathVariable("approvalId") String approvalId) {
     return getApprovalStatusHistoryAction.invoke(approvalId);
   }
-
 
   @ResponseBody
   @ResponseStatus(value = HttpStatus.NO_CONTENT)
@@ -105,5 +87,46 @@ public class ApprovalV1Controller {
   public Void updateApprovalDomainMapping(@PathVariable("approvalId") String approvalId,
       @RequestBody DomainUpdateRequest request) {
     return updateApprovalDomainMappingAction.invoke(approvalId, request);
+  }
+
+  @ResponseBody
+  @ResponseStatus(value = HttpStatus.OK)
+  @RequestMapping(method = RequestMethod.GET)
+  public Page<Approval> getApprovals(@RequestParam(value = "offset") int offset,
+      @RequestParam(value = "size") int size,
+      @RequestParam(value = "type", required = false) String type,
+      @RequestParam(value = "type_id", required = false) String typeId,
+      @RequestParam(value = "status", required = false) String status,
+      @RequestParam(value = "expiring_in", required = false) String expiringInMinutes,
+      @RequestParam(value = "requester_id", required = false) String requesterId,
+      @RequestParam(value = "approver_id", required = false) String approverId,
+      @RequestParam(value = "approver_status", required = false) String approverStatus,
+      @RequestParam(value = "attribute_key", required = false) String attributeKey,
+      @RequestParam(value = "attribute_value", required = false) String attributeValue,
+      @RequestParam(value = "ordered_by", required = false) String orderedBy) {
+    ApprovalFilters filters = getApprovalFilters(offset, size, requesterId, status,
+        expiringInMinutes, approverId, approverStatus, type, typeId, orderedBy,
+        attributeKey, attributeValue);
+    return getFilteredApprovalsAction.invoke(filters);
+  }
+
+  private ApprovalFilters getApprovalFilters(int offset, int size, String requesterId,
+      String status, String expiringInMinutes, String approverId, String approverStatus,
+      String type, String typeId, String orderedBy, String attributeKey, String attributeValue) {
+    ApprovalFilters filters = new ApprovalFilters();
+    filters.setOffset(offset);
+    filters.setSize(size);
+    filters.setRequesterId(requesterId);
+    filters.setStatus(status);
+    filters.setExpiringInMinutes(expiringInMinutes);
+    filters.setApproverId(approverId);
+    filters.setApproverStatus(approverStatus);
+    filters.setType(type);
+    filters.setTypeId(typeId);
+    filters.setOrderedBy(orderedBy);
+    filters.setAttributeKey(attributeKey);
+    filters.setAttributeValue(attributeValue);
+    filters.validate();
+    return filters;
   }
 }

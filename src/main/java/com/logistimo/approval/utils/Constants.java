@@ -13,5 +13,6 @@ public class Constants {
   public static final String QUEUED_STATUS = "QUEUED";
   public static final String PENDING_STATUS = "PENDING";
   public static final String APPROVED_STATUS = "APPROVED";
+  public static final String PENDING_OR_APPROVED_STATUS = "PENDING OR APPROVED";
 
 }

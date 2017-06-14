@@ -11,7 +11,6 @@ import org.springframework.data.repository.CrudRepository;
 
 public interface IApprovalRepository extends CrudRepository<Approval, String> {
 
-  @Query(value = "SELECT * FROM approvals WHERE type = ?1 AND type_id = ?2", nativeQuery = true)
-  List<Approval> findByTypeAndTypeId(String type, String typeId);
-
+  @Query(value = "SELECT * FROM approvals WHERE type = ?1 AND type_id = ?2 AND status IN('PENDING', 'APPROVED')", nativeQuery = true)
+  List<Approval> findApprovedOrPendingApprovalsByTypeAndTypeId(String type, String typeId);
 }
