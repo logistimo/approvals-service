@@ -3,17 +3,9 @@ package com.logistimo.approval.models;
 import static com.logistimo.approval.utils.Constants.*;
 
 import com.logistimo.approval.exception.BaseException;
-import java.util.Set;
-import javax.validation.ConstraintViolation;
-import javax.validation.Validation;
-import javax.validation.Validator;
-import javax.validation.constraints.Future;
-import javax.validation.constraints.NotNull;
-import javax.validation.constraints.NotNull.List;
 import lombok.Data;
 import org.apache.catalina.connector.Response;
 import org.apache.commons.lang.StringUtils;
-import org.springframework.util.CollectionUtils;
 
 /**
  * Created by nitisha.khandelwal on 12/06/17.

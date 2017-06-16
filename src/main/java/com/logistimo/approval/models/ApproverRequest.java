@@ -1,6 +1,7 @@
 package com.logistimo.approval.models;
 
 import java.util.List;
+import javax.validation.constraints.NotNull;
 import lombok.Data;
 
 /**
@@ -10,9 +11,12 @@ import lombok.Data;
 @Data
 public class ApproverRequest {
 
+  @NotNull(message = "User Ids cannot be null.")
   private List<String> userIds;
 
+  @NotNull(message = "Approver Expiry cannot be null.")
   private int expiry;
 
+  @NotNull(message = "Approver Type cannot be null.")
   private String type;
 }

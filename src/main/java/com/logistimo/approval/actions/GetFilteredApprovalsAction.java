@@ -1,15 +1,11 @@
 package com.logistimo.approval.actions;
 
-import static com.logistimo.approval.utils.Constants.*;
 import static org.springframework.data.jpa.domain.Specifications.where;
 
 import com.logistimo.approval.config.ApprovalSpecifications;
 import com.logistimo.approval.entity.Approval;
-import com.logistimo.approval.exception.BaseException;
 import com.logistimo.approval.models.ApprovalFilters;
 import com.logistimo.approval.repository.IApprovalCustomRepository;
-import org.apache.catalina.connector.Response;
-import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;

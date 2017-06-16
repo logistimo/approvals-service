@@ -77,7 +77,7 @@ public class ApprovalV1Controller {
   @ResponseStatus(value = HttpStatus.NO_CONTENT)
   @RequestMapping(path = "/{approvalId}/status", method = RequestMethod.PUT)
   public Void updateApprovalStatusHistory(@PathVariable("approvalId") String approvalId,
-      @RequestBody StatusUpdateRequest request) {
+      @Valid @RequestBody StatusUpdateRequest request) {
     return updateApprovalStatusAction.invoke(approvalId, request);
   }
 

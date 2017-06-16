@@ -10,10 +10,10 @@ import lombok.Data;
 @Data
 public class StatusUpdateRequest {
 
-  @NotNull
+  @NotNull(message = "Status cannot be null.")
   private String status;
 
-  @NotNull
+  @NotNull(message = "Updated By cannot be null.")
   private String updatedBy;
 
   private String messageId;
