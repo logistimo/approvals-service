@@ -50,31 +50,13 @@ public class UpdateApprovalStatusAction {
     lastStatus.setEndTime(now);
     statusHistoryRepository.save(lastStatus);
 
-    statusHistoryRepository.save(getNewStatusHistory(approvalId, request, now));
+    statusHistoryRepository.save(new ApprovalStatusHistory(approvalId, request.getStatus(),
+        request.getUpdatedBy(), request.getMessageId(), now));
 
-    publishApprovalStatusUpdateMessage(approval);
+    jmsUtil.sendMessage(new ApprovalStatusUpdateEvent(approval.getId(), approval.getType(),
+        approval.getTypeId(), approval.getStatus(), approval.getUpdatedBy()));
 
     return null;
   }
 
-  private ApprovalStatusHistory getNewStatusHistory(String approvalId, StatusUpdateRequest request,
-      Date now) {
-    ApprovalStatusHistory newStatus = new ApprovalStatusHistory();
-    newStatus.setApprovalId(approvalId);
-    newStatus.setStatus(request.getStatus());
-    newStatus.setMessageId(request.getMessageId());
-    newStatus.setUpdatedBy(request.getUpdatedBy());
-    newStatus.setStartTime(now);
-    return newStatus;
-  }
-
-  private void publishApprovalStatusUpdateMessage(Approval approval) {
-    ApprovalStatusUpdateEvent message = new ApprovalStatusUpdateEvent();
-    message.setApprovalId(approval.getId());
-    message.setStatus(approval.getStatus());
-    message.setUpdatedBy(approval.getUpdatedBy());
-    message.setType(approval.getType());
-    message.setTypeId(approval.getTypeId());
-    jmsUtil.sendMessage(message);
-  }
 }

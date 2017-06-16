@@ -7,7 +7,9 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Table;
+import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 
@@ -17,8 +19,14 @@ import org.hibernate.annotations.UpdateTimestamp;
 
 @Data
 @Entity
+@NoArgsConstructor
 @Table(name = "approval_domain_mapping")
 public class ApprovalDomainMapping {
+
+  public ApprovalDomainMapping(String approvalId, Long domainId) {
+    this.approvalId = approvalId;
+    this.domainId = domainId;
+  }
 
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)

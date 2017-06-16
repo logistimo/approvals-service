@@ -107,9 +107,7 @@ public class CreateApprovalActionTest {
     assertEquals(response.getConversationId(), getApprovalFromDB().getConversationId());
     assertEquals(response.getSourceDomainId(), request.getSourceDomainId());
     assertEquals(response.getDomains(), request.getDomains());
-    assertEquals(response.getExpireAt(), request.getExpireAt());
     assertEquals(response.getAttributes(), request.getAttributes());
-    assertEquals(response.getApprovers(), request.getApprovers());
     assertEquals(response.getCreatedAt(), getApprovalFromDB().getCreatedAt());
     assertEquals(response.getUpdatedAt(), getApprovalFromDB().getUpdatedAt());
   }

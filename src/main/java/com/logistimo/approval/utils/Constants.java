@@ -11,8 +11,12 @@ public class Constants {
   public static final String APPROVER_ID_NOT_PRESENT = "The param - approver_status cannot be present without approver_id.";
 
   public static final String QUEUED_STATUS = "QUEUED";
+  public static final String ACTIVE_STATUS = "ACTIVE";
   public static final String PENDING_STATUS = "PENDING";
   public static final String APPROVED_STATUS = "APPROVED";
   public static final String PENDING_OR_APPROVED_STATUS = "PENDING OR APPROVED";
+
+  public static final String PRIMARY = "PRIMARY";
+  public static final String SECONDARY = "SECONDARY";
 
 }

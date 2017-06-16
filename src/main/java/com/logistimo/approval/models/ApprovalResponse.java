@@ -36,7 +36,9 @@ public class ApprovalResponse {
 
   private Map<String, String> attributes = new HashMap<>();
 
-  private List<Approver> approvers = new ArrayList<>();
+  private String activeApproverType;
+
+  private List<ApproverResponse> approvers = new ArrayList<>();
 
   @JsonFormat(pattern = "yyyy-MM-dd hh:mm:ss")
   private Date createdAt;

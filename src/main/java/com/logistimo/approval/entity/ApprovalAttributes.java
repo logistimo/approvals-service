@@ -7,6 +7,7 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Table;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 /**
  * Created by nitisha.khandelwal on 10/05/17.
@@ -14,8 +15,15 @@ import lombok.Data;
 
 @Data
 @Entity
+@NoArgsConstructor
 @Table(name = "approval_attributes")
 public class ApprovalAttributes {
+
+  public ApprovalAttributes(String approvalId, String key, String value) {
+    this.approvalId = approvalId;
+    this.key = key;
+    this.value = value;
+  }
 
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)

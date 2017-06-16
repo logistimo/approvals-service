@@ -9,6 +9,7 @@ import javax.persistence.Id;
 import javax.persistence.Table;
 import javax.persistence.Version;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 import org.hibernate.annotations.CreationTimestamp;
 
 /**
@@ -17,8 +18,19 @@ import org.hibernate.annotations.CreationTimestamp;
 
 @Data
 @Entity
+@NoArgsConstructor
 @Table(name = "approval_status_history")
 public class ApprovalStatusHistory {
+
+  public ApprovalStatusHistory(String approvalId, String status, String updatedBy,
+      String messageId, Date startTime) {
+
+    this.approvalId = approvalId;
+    this.status = status;
+    this.updatedBy = updatedBy;
+    this.messageId = messageId;
+    this.startTime = startTime;
+  }
 
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)

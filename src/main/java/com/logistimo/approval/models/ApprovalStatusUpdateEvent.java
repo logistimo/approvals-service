@@ -11,6 +11,15 @@ import lombok.Data;
 @Data
 public class ApprovalStatusUpdateEvent implements Serializable {
 
+  public ApprovalStatusUpdateEvent(String approvalId, String type, String typeId, String status,
+      String updatedBy) {
+    this.approvalId = approvalId;
+    this.type = type;
+    this.typeId = typeId;
+    this.status = status;
+    this.updatedBy = updatedBy;
+  }
+
   @NotNull
   private String approvalId;
 

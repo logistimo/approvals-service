@@ -6,7 +6,7 @@ import com.logistimo.approval.entity.ApprovalDomainMapping;
 import com.logistimo.approval.entity.ApprovalStatusHistory;
 import com.logistimo.approval.entity.ApproverQueue;
 import com.logistimo.approval.models.ApprovalRequest;
-import com.logistimo.approval.models.Approver;
+import com.logistimo.approval.models.ApproverRequest;
 import com.logistimo.approval.models.DomainUpdateRequest;
 import com.logistimo.approval.models.StatusUpdateRequest;
 import java.util.ArrayList;
@@ -24,27 +24,16 @@ public class Utility {
   public static final String APPROVAL_ID = "A123";
 
   public static List<ApprovalAttributes> getApprovalAttributes() {
-    ApprovalAttributes attribute1 = new ApprovalAttributes();
-    attribute1.setApprovalId(APPROVAL_ID);
-    attribute1.setKey("kioskId");
-    attribute1.setValue("K001");
-    return Collections.singletonList(attribute1);
+    return Collections.singletonList(new ApprovalAttributes(APPROVAL_ID, "kioskId", "K001"));
   }
 
   public static List<ApproverQueue> getApproverQueue() {
-    ApproverQueue queue = new ApproverQueue();
-    queue.setId(1L);
-    queue.setUserId("U001");
-    queue.setApprovalId(APPROVAL_ID);
-    queue.setApproverStatus("QUEUED");
-    return Collections.singletonList(queue);
+    return Collections.singletonList(new ApproverQueue(APPROVAL_ID, "U001", "QUEUED", "PRIMARY",
+        null, null));
   }
 
   public static List<ApprovalDomainMapping> getApprovalDomainMappings() {
-    ApprovalDomainMapping mapping1 = new ApprovalDomainMapping();
-    mapping1.setApprovalId(APPROVAL_ID);
-    mapping1.setDomainId(16L);
-    return Collections.singletonList(mapping1);
+    return Collections.singletonList(new ApprovalDomainMapping(APPROVAL_ID, 16L));
   }
 
   public static Approval getApproval() {
@@ -82,16 +71,8 @@ public class Utility {
 
   public static List<ApprovalStatusHistory> getApprovalStatusHistories() {
     List<ApprovalStatusHistory> statusHistories = new ArrayList<>();
-    ApprovalStatusHistory history1 = new ApprovalStatusHistory();
-    history1.setApprovalId(APPROVAL_ID);
-    history1.setStatus("PENDING");
-    history1.setUpdatedBy("R001");
-    statusHistories.add(history1);
-    ApprovalStatusHistory history2 = new ApprovalStatusHistory();
-    history1.setApprovalId(APPROVAL_ID);
-    history1.setStatus("APPROVED");
-    history1.setUpdatedBy("U002");
-    statusHistories.add(history2);
+    statusHistories.add(new ApprovalStatusHistory(APPROVAL_ID, "PENDING", "R001", null, null));
+    statusHistories.add(new ApprovalStatusHistory(APPROVAL_ID, "APPROVED", "U002", null, null));
     return statusHistories;
   }
 
@@ -111,11 +92,7 @@ public class Utility {
   }
 
   public static ApprovalStatusHistory getLastStatus() {
-    ApprovalStatusHistory statusHistory = new ApprovalStatusHistory();
-    statusHistory.setApprovalId(APPROVAL_ID);
-    statusHistory.setStatus("PENDING");
-    statusHistory.setUpdatedBy("R001");
-    return statusHistory;
+    return new ApprovalStatusHistory(APPROVAL_ID, "PENDING", "R001", null, null);
   }
 
   public static ApprovalRequest getApprovalRequest() {
@@ -126,8 +103,8 @@ public class Utility {
     request.setSourceDomainId(2L);
     request.setMessage("This is a message.");
     request.setAttributes(Collections.singletonMap("kioskId", "K002"));
-    Approver approver = new Approver();
-    approver.setUserId("U002");
+    ApproverRequest approver = new ApproverRequest();
+    approver.setUserIds(Collections.singletonList("U002"));
     request.setApprovers(Collections.singletonList(approver));
     request.setDomains(Arrays.asList(4L, 5L));
     return request;

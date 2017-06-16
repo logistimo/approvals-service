@@ -32,8 +32,7 @@ public class UpdateApprovalDomainMappingAction {
     Approval approval = approvalRepository.findOne(approvalId);
 
     if (approval == null) {
-      throw new BaseException(Response.SC_NOT_FOUND,
-          String.format(APPROVAL_NOT_FOUND, approvalId));
+      throw new BaseException(Response.SC_NOT_FOUND, String.format(APPROVAL_NOT_FOUND, approvalId));
     }
 
     if (!StringUtils.isEmpty(request.getSourceDomainId())) {
@@ -43,13 +42,10 @@ public class UpdateApprovalDomainMappingAction {
 
     if (!CollectionUtils.isEmpty(request.getDomains())) {
       approvalDomainMappingRepository.deleteByApprovalId(approvalId);
-      for (Long domainId : request.getDomains()) {
-        ApprovalDomainMapping domainMapping = new ApprovalDomainMapping();
-        domainMapping.setApprovalId(approvalId);
-        domainMapping.setDomainId(domainId);
-        approvalDomainMappingRepository.save(domainMapping);
-      }
+      request.getDomains().forEach(item -> approvalDomainMappingRepository.save(
+          new ApprovalDomainMapping(approvalId, item)));
     }
+
     return null;
   }
 
