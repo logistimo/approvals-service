@@ -1,6 +1,5 @@
 package com.logistimo.approval.models;
 
-import com.fasterxml.jackson.annotation.JsonFormat;
 import java.util.Date;
 import lombok.Data;
 
@@ -15,10 +14,8 @@ public class ApproverResponse {
 
   private String type;
 
-  @JsonFormat(pattern = "yyyy-MM-dd hh:mm:ss")
   private Date startTime;
 
-  @JsonFormat(pattern = "yyyy-MM-dd hh:mm:ss")
   private Date endTime;
 
 }

@@ -65,9 +65,13 @@ public class Approval {
 
   @OneToMany(fetch = FetchType.LAZY)
   @JoinColumn(name = "approval_id")
-  private Set<ApproverQueue> approverQueue;
+  private Set<ApproverQueue> approvers;
 
   @OneToMany(fetch = FetchType.LAZY)
   @JoinColumn(name = "approval_id")
-  private Set<ApprovalAttributes> approvalAttributes;
+  private Set<ApprovalAttributes> attributes;
+
+  @OneToMany(fetch = FetchType.LAZY)
+  @JoinColumn(name = "approval_id")
+  private Set<ApprovalDomainMapping> domains;
 }

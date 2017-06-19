@@ -26,8 +26,9 @@ public class GetFilteredApprovalsAction {
 
     Pageable pageable = new PageRequest(filters.getOffset(), filters.getSize());
 
-    Page<Approval> approvals = approvalCustomRepository.findAll(
+    return approvalCustomRepository.findAll(
         where(ApprovalSpecifications.withRequesterId(filters.getRequesterId()))
+            .and(ApprovalSpecifications.withDomainId(Long.valueOf(filters.getDomainId())))
             .and(ApprovalSpecifications.withStatus(filters.getStatus()))
             .and(ApprovalSpecifications.withType(filters.getType()))
             .and(ApprovalSpecifications.withTypeId(filters.getTypeId()))
@@ -36,7 +37,5 @@ public class GetFilteredApprovalsAction {
             .and(ApprovalSpecifications.withApproverStatus(filters.getApproverStatus()))
             .and(ApprovalSpecifications.withApprovalKey(filters.getAttributeKey()))
             .and(ApprovalSpecifications.withApprovalValue(filters.getAttributeValue())), pageable);
-
-    return approvals;
   }
 }

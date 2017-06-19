@@ -103,16 +103,18 @@ public class ApprovalV1Controller {
       @RequestParam(value = "approver_status", required = false) String approverStatus,
       @RequestParam(value = "attribute_key", required = false) String attributeKey,
       @RequestParam(value = "attribute_value", required = false) String attributeValue,
+      @RequestParam(value = "domain_id") int domainId,
       @RequestParam(value = "ordered_by", required = false) String orderedBy) {
     ApprovalFilters filters = getApprovalFilters(offset, size, requesterId, status,
         expiringInMinutes, approverId, approverStatus, type, typeId, orderedBy,
-        attributeKey, attributeValue);
+        attributeKey, attributeValue, domainId);
     return getFilteredApprovalsAction.invoke(filters);
   }
 
   private ApprovalFilters getApprovalFilters(int offset, int size, String requesterId,
       String status, String expiringInMinutes, String approverId, String approverStatus,
-      String type, String typeId, String orderedBy, String attributeKey, String attributeValue) {
+      String type, String typeId, String orderedBy, String attributeKey, String attributeValue,
+      int domainId) {
     ApprovalFilters filters = new ApprovalFilters();
     filters.setOffset(offset);
     filters.setSize(size);
@@ -126,6 +128,7 @@ public class ApprovalV1Controller {
     filters.setOrderedBy(orderedBy);
     filters.setAttributeKey(attributeKey);
     filters.setAttributeValue(attributeValue);
+    filters.setDomainId(domainId);
     filters.validate();
     return filters;
   }

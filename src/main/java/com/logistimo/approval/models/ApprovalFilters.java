@@ -36,6 +36,8 @@ public class ApprovalFilters {
 
   private String attributeValue;
 
+  private int domainId;
+
   private String orderedBy;
 
   public void validate() {

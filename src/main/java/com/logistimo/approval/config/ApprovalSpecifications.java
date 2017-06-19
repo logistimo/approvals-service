@@ -61,7 +61,7 @@ public class ApprovalSpecifications {
     }
 
     return (root, criteriaQuery, criteriaBuilder) -> {
-      Join<Approval, ApproverQueue> approvers = root.join("approverQueue");
+      Join<Approval, ApproverQueue> approvers = root.join("approvers");
       return criteriaBuilder.equal(approvers.get("userId"), approverId);
     };
   }
@@ -72,7 +72,7 @@ public class ApprovalSpecifications {
     }
 
     return (root, criteriaQuery, criteriaBuilder) -> {
-      Join<Approval, ApproverQueue> approvers = root.join("approverQueue");
+      Join<Approval, ApproverQueue> approvers = root.join("approvers");
       return criteriaBuilder.equal(approvers.get("approverStatus"), approverStatus);
     };
 
@@ -84,7 +84,7 @@ public class ApprovalSpecifications {
     }
 
     return (root, criteriaQuery, criteriaBuilder) -> {
-      Join<Approval, ApprovalAttributes> attributes = root.join("approvalAttributes");
+      Join<Approval, ApprovalAttributes> attributes = root.join("attributes");
       return criteriaBuilder.equal(attributes.get("key"), key);
     };
   }
@@ -95,8 +95,19 @@ public class ApprovalSpecifications {
     }
 
     return (root, criteriaQuery, criteriaBuilder) -> {
-      Join<Approval, ApprovalAttributes> attributes = root.join("approvalAttributes");
+      Join<Approval, ApprovalAttributes> attributes = root.join("attributes");
       return criteriaBuilder.equal(attributes.get("value"), value);
+    };
+  }
+
+  public static Specification<Approval> withDomainId(Long domainId) {
+    if (domainId == null) {
+      return null;
+    }
+
+    return (root, criteriaQuery, criteriaBuilder) -> {
+      Join<Approval, ApprovalAttributes> attributes = root.join("domains");
+      return criteriaBuilder.equal(attributes.get("domainId"), domainId);
     };
   }
 }

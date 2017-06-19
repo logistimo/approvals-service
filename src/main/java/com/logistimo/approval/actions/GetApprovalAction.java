@@ -7,12 +7,9 @@ import com.logistimo.approval.entity.ApproverQueue;
 import com.logistimo.approval.exception.BaseException;
 import com.logistimo.approval.models.ApprovalResponse;
 import com.logistimo.approval.models.ApproverResponse;
-import com.logistimo.approval.repository.IApprovalAttributesRepository;
-import com.logistimo.approval.repository.IApprovalDomainMappingRepository;
 import com.logistimo.approval.repository.IApprovalRepository;
-import com.logistimo.approval.repository.IApproverQueueRepository;
-import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 import org.apache.catalina.connector.Response;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -29,15 +26,6 @@ public class GetApprovalAction {
   @Autowired
   private IApprovalRepository approvalRepository;
 
-  @Autowired
-  private IApproverQueueRepository approverQueueRepository;
-
-  @Autowired
-  private IApprovalAttributesRepository attributesRepository;
-
-  @Autowired
-  private IApprovalDomainMappingRepository domainMappingRepository;
-
   public ApprovalResponse invoke(String approvalId) {
 
     Approval approval = approvalRepository.findOne(approvalId);
@@ -49,9 +37,9 @@ public class GetApprovalAction {
     ModelMapper mapper = new ModelMapper();
     mapper.getConfiguration().setAmbiguityIgnored(true);
 
-    ApprovalResponse response = mapper.map(approval, ApprovalResponse.class);
+    ApprovalResponse response = getResponseFromApprovalDB(approval);
 
-    List<ApproverQueue> queues = approverQueueRepository.findByApprovalId(approvalId);
+    Set<ApproverQueue> queues = approval.getApprovers();
 
     if (!CollectionUtils.isEmpty(queues)) {
       for (ApproverQueue queue : queues) {
@@ -62,12 +50,27 @@ public class GetApprovalAction {
       }
     }
 
-    Optional.ofNullable(domainMappingRepository.findByApprovalId(approvalId)).ifPresent(
+    Optional.ofNullable(approval.getDomains()).ifPresent(
         l -> l.forEach(item -> response.getDomains().add(item.getDomainId())));
 
-    Optional.ofNullable(attributesRepository.findByApprovalId(approvalId)).ifPresent(
+    Optional.ofNullable(approval.getAttributes()).ifPresent(
         l -> l.forEach(item -> response.getAttributes().put(item.getKey(), item.getValue())));
 
+    return response;
+  }
+
+  private ApprovalResponse getResponseFromApprovalDB(Approval approval) {
+    ApprovalResponse response = new ApprovalResponse();
+    response.setApprovalId(approval.getId());
+    response.setType(approval.getType());
+    response.setTypeId(approval.getTypeId());
+    response.setRequesterId(approval.getRequesterId());
+    response.setStatus(approval.getStatus());
+    response.setConversationId(approval.getConversationId());
+    response.setSourceDomainId(approval.getSourceDomainId());
+    response.setExpireAt(approval.getExpireAt());
+    response.setCreatedAt(approval.getCreatedAt());
+    response.setUpdatedAt(approval.getUpdatedAt());
     return response;
   }
 }

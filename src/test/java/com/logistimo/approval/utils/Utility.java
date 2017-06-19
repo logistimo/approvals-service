@@ -14,6 +14,7 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.Date;
 import java.util.List;
+import org.springframework.util.CollectionUtils;
 
 /**
  * Created by nitisha.khandelwal on 23/05/17.
@@ -22,15 +23,6 @@ import java.util.List;
 public class Utility {
 
   public static final String APPROVAL_ID = "A123";
-
-  public static List<ApprovalAttributes> getApprovalAttributes() {
-    return Collections.singletonList(new ApprovalAttributes(APPROVAL_ID, "kioskId", "K001"));
-  }
-
-  public static List<ApproverQueue> getApproverQueue() {
-    return Collections.singletonList(new ApproverQueue(APPROVAL_ID, "U001", "QUEUED", "PRIMARY",
-        null, null));
-  }
 
   public static List<ApprovalDomainMapping> getApprovalDomainMappings() {
     return Collections.singletonList(new ApprovalDomainMapping(APPROVAL_ID, 16L));
@@ -49,6 +41,11 @@ public class Utility {
     approval.setExpireAt(new Date(2017, 06, 12, 16, 53, 24));
     approval.setCreatedAt(new Date(2017, 05, 12, 16, 53, 24));
     approval.setUpdatedAt(new Date(2017, 05, 12, 16, 53, 24));
+    approval.setDomains(Collections.singleton((new ApprovalDomainMapping(APPROVAL_ID, 16L))));
+    approval.setApprovers(Collections.singleton(new ApproverQueue(APPROVAL_ID, "U001", "QUEUED",
+        "PRIMARY", null, null)));
+    approval.setAttributes(Collections.singleton(new ApprovalAttributes(APPROVAL_ID, "kioskId",
+        "K001")));
     return approval;
   }
 

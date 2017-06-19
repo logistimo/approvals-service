@@ -2,10 +2,7 @@ package com.logistimo.approval.actions;
 
 import com.logistimo.approval.exception.BaseException;
 import com.logistimo.approval.models.ApprovalResponse;
-import com.logistimo.approval.repository.IApprovalAttributesRepository;
-import com.logistimo.approval.repository.IApprovalDomainMappingRepository;
 import com.logistimo.approval.repository.IApprovalRepository;
-import com.logistimo.approval.repository.IApproverQueueRepository;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -32,16 +29,6 @@ public class GetApprovalActionTest {
 
   @Mock
   private IApprovalRepository approvalRepository;
-
-  @Mock
-  private IApproverQueueRepository approverQueueRepository;
-
-  @Mock
-  private IApprovalAttributesRepository attributesRepository;
-
-  @Mock
-  private IApprovalDomainMappingRepository domainMappingRepository;
-
   @InjectMocks
   private GetApprovalAction action;
 
@@ -49,18 +36,12 @@ public class GetApprovalActionTest {
   public void setUp() {
     MockitoAnnotations.initMocks(this);
     when(approvalRepository.findOne(APPROVAL_ID)).thenReturn(getApproval());
-    when(approverQueueRepository.findByApprovalId(APPROVAL_ID)).thenReturn(getApproverQueue());
-    when(attributesRepository.findByApprovalId(APPROVAL_ID)).thenReturn(getApprovalAttributes());
-    when(domainMappingRepository.findByApprovalId(APPROVAL_ID)).thenReturn(getApprovalDomainMappings());
   }
 
   @Test
   public void getApprovalTest() {
     ApprovalResponse response = action.invoke(APPROVAL_ID);
     verify(approvalRepository, times(1)).findOne(APPROVAL_ID);
-    verify(approverQueueRepository, times(1)).findByApprovalId(APPROVAL_ID);
-    verify(attributesRepository, times(1)).findByApprovalId(APPROVAL_ID);
-    verify(domainMappingRepository, times(1)).findByApprovalId(APPROVAL_ID);
     assertEquals(response.getApprovers().size(), 1);
     assertEquals(response.getDomains().size(), 1);
     assertEquals(response.getAttributes().size(), 1);
