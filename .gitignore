@@ -20,7 +20,6 @@ deployment
 *.dmg
 *.gz
 *.iso
-*.jar
 *.rar
 *.tar
 *.zip
@@ -96,3 +95,6 @@ nbdist/
 *.zip
 *.tar.gz
 *.rar
+
+#But not these files
+!gradle-wrapper.jar
