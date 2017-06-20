@@ -6,6 +6,7 @@ buildscript {
 
     dependencies {
         classpath("org.springframework.boot:spring-boot-gradle-plugin:${springBootVersion}")
+        classpath('se.transmode.gradle:gradle-docker:1.2')
     }
 }
 
@@ -13,7 +14,14 @@ apply plugin: 'java'
 
 apply plugin: 'idea'
 
+apply plugin: 'docker'
+
 apply plugin: 'org.springframework.boot'
+
+jar {
+    baseName = 'approval-service'
+    version = '0.1.0'
+}
 
 sourceCompatibility = 1.8
 
@@ -26,6 +34,26 @@ springBoot {
     mainClass = "com.logistimo.approval.ApprovalApplication"
 }
 
+group = 'approvals'
+
+task buildDocker(type: Docker, dependsOn: build) {
+    push = false
+    applicationName = jar.baseName
+    dockerfile = file('src/main/docker/Dockerfile')
+    doFirst {
+        copy {
+            from jar
+            into stageDir
+
+            from 'src/main/docker/docker-entrypoint.sh'
+            into stageDir
+
+
+            from 'src/main/docker/jmx_exporter.json'
+            into stageDir
+        }
+    }
+}
 
 dependencies {
 
