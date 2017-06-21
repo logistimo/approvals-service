@@ -14,7 +14,7 @@ import org.springframework.stereotype.Component;
 public class JmsUtil {
 
   @Autowired
-  @Produce(uri = "jms:approval-status-update")
+  @Produce(uri = "seda:approval-status-update")
   ProducerTemplate producerTemplate;
 
   public void sendMessage(ApprovalStatusUpdateEvent message) {
