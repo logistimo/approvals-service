@@ -11,8 +11,8 @@ ADD approval-service-0.1.0.jar approval-service.jar
 ENV JAVA_OPTS="" \
                 	SERVER_PORT=6400 \
                 	MYSQL_HOST=jdbc:mariadb://localhost:3306/approval_service \
-                	MYSQL_USER=root \
-                	MYSQL_PASS= \
+                	MYSQL_USER=logistimo \
+                	MYSQL_PASSWORD=logistimo \
                 	CONVERSATION_SERVICE_URL=http://localhost:8080 \
                 	ACTIVEMQ_BROKER_URL=tcp://localhost:61616 \
                 	ACTIVEMQ_USER=admin \
