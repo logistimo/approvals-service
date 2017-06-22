@@ -50,11 +50,13 @@ public class UpdateApprovalStatusAction {
     lastStatus.setEndTime(now);
     statusHistoryRepository.save(lastStatus);
 
-    statusHistoryRepository.save(new ApprovalStatusHistory(approvalId, request.getStatus(),
-        request.getUpdatedBy(), request.getMessageId(), now));
+    ApprovalStatusHistory currentStatus = statusHistoryRepository.save(
+        new ApprovalStatusHistory(approvalId, request.getStatus(), request.getUpdatedBy(),
+            request.getMessageId(), now));
 
-    jmsUtil.sendMessage(new ApprovalStatusUpdateEvent(approval.getId(), approval.getType(),
-        approval.getTypeId(), approval.getStatus(), approval.getUpdatedBy()));
+    jmsUtil.sendMessage(new ApprovalStatusUpdateEvent(approval.getId(),
+        approval.getType(), approval.getTypeId(), approval.getStatus(),
+        approval.getUpdatedBy(), currentStatus.getStartTime()));
 
     return null;
   }
