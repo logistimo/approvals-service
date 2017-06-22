@@ -53,6 +53,8 @@ public class UpdateApprovalStatusActionTest {
     when(approvalRepository.findOne(APPROVAL_ID)).thenReturn(getApproval());
     when(statusHistoryRepository.findLastUpdateByApprovalId(APPROVAL_ID))
         .thenReturn(getLastStatus());
+    when(statusHistoryRepository.save(any(ApprovalStatusHistory.class)))
+        .thenReturn(getCurrentStatus());
   }
 
   @Test
@@ -74,7 +76,6 @@ public class UpdateApprovalStatusActionTest {
     assertEquals(eventCaptor.getValue().getApprovalId(), APPROVAL_ID);
     assertEquals(eventCaptor.getValue().getType(), getApproval().getType());
     assertEquals(eventCaptor.getValue().getTypeId(), getApproval().getTypeId());
-
   }
 
   @Test(expected = BaseException.class)

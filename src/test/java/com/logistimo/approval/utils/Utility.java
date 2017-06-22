@@ -9,6 +9,7 @@ import com.logistimo.approval.models.ApprovalRequest;
 import com.logistimo.approval.models.ApproverRequest;
 import com.logistimo.approval.models.DomainUpdateRequest;
 import com.logistimo.approval.models.StatusUpdateRequest;
+import java.time.Instant;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
@@ -90,6 +91,11 @@ public class Utility {
 
   public static ApprovalStatusHistory getLastStatus() {
     return new ApprovalStatusHistory(APPROVAL_ID, "PENDING", "R001", null, null);
+  }
+
+  public static ApprovalStatusHistory getCurrentStatus() {
+    return new ApprovalStatusHistory(APPROVAL_ID, "APPROVED", "U002", "M002",
+        Date.from(Instant.now()));
   }
 
   public static ApprovalRequest getApprovalRequest() {

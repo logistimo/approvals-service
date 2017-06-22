@@ -4,6 +4,10 @@ MAINTAINER Nitisha Khandelwal <nitisha@logistimo.com>
 
 VOLUME /tmp
 
+ARG APP_NAME
+
+ARG APP_VERSION
+
 EXPOSE 6400
 
 ADD approval-service-0.1.0.jar approval-service.jar
