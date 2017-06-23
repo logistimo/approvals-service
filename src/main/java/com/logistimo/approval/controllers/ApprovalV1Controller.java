@@ -60,7 +60,7 @@ public class ApprovalV1Controller {
 
   @ResponseBody
   @ResponseStatus(value = HttpStatus.CREATED)
-  @RequestMapping(path = "/", method = RequestMethod.POST)
+  @RequestMapping(method = RequestMethod.POST)
   public ApprovalResponse createApproval(@Valid @RequestBody ApprovalRequest request) {
     return createApprovalAction.invoke(request);
   }
