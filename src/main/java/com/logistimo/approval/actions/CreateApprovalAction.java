@@ -69,7 +69,7 @@ public class CreateApprovalAction {
         .findApprovedOrPendingApprovalsByTypeAndTypeId(request.getType(), request.getTypeId());
 
     if (!CollectionUtils.isEmpty(approvals)) {
-      throw new BaseException(Response.SC_BAD_REQUEST, String.format(APPROVAL_ALREADY_EXITS,
+      throw new BaseException(Response.SC_CONFLICT, String.format(APPROVAL_ALREADY_EXITS,
           request.getType(), request.getTypeId(), PENDING_OR_APPROVED_STATUS));
     }
 

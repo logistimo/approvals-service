@@ -108,5 +108,4 @@ public class UpdateApprovalStatusAction {
       throw new BaseException(Response.SC_BAD_REQUEST, REQUESTER_NOT_PRESENT);
     }
   }
-
 }

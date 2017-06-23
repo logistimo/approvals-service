@@ -24,7 +24,6 @@ public class ApprovalStatusHistory {
 
   public ApprovalStatusHistory(String approvalId, String status, String updatedBy,
       String messageId, Date startTime) {
-
     this.approvalId = approvalId;
     this.status = status;
     this.updatedBy = updatedBy;

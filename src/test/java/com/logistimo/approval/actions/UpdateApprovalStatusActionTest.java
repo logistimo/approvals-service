@@ -1,6 +1,8 @@
 package com.logistimo.approval.actions;
 
 import static com.logistimo.approval.utils.Utility.*;
+import static com.logistimo.approval.utils.Utility.getApproval;
+import static com.logistimo.approval.utils.Utility.getStatusUpdateRequest;
 import static org.mockito.Matchers.any;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
@@ -10,13 +12,16 @@ import static junit.framework.TestCase.assertEquals;
 
 import com.logistimo.approval.entity.Approval;
 import com.logistimo.approval.entity.ApprovalStatusHistory;
+import com.logistimo.approval.entity.ApproverQueue;
 import com.logistimo.approval.exception.BaseException;
 import com.logistimo.approval.models.ApprovalStatusUpdateEvent;
 import com.logistimo.approval.models.StatusUpdateRequest;
 import com.logistimo.approval.repository.IApprovalRepository;
 import com.logistimo.approval.repository.IApprovalStatusHistoryRepository;
+import com.logistimo.approval.utils.Constants;
 import com.logistimo.approval.utils.JmsUtil;
 import java.io.IOException;
+import java.util.Collections;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -50,7 +55,6 @@ public class UpdateApprovalStatusActionTest {
   @Before
   public void setUp() {
     MockitoAnnotations.initMocks(this);
-    when(approvalRepository.findOne(APPROVAL_ID)).thenReturn(getApproval());
     when(statusHistoryRepository.findLastUpdateByApprovalId(APPROVAL_ID))
         .thenReturn(getLastStatus());
     when(statusHistoryRepository.save(any(ApprovalStatusHistory.class)))
@@ -59,7 +63,7 @@ public class UpdateApprovalStatusActionTest {
 
   @Test
   public void updateApprovalStatusActionTest() {
-
+    when(approvalRepository.findOne(APPROVAL_ID)).thenReturn(getApproval());
     StatusUpdateRequest request = getStatusUpdateRequest();
     action.invoke(APPROVAL_ID, request);
 
@@ -77,10 +81,96 @@ public class UpdateApprovalStatusActionTest {
     assertEquals(eventCaptor.getValue().getType(), getApproval().getType());
     assertEquals(eventCaptor.getValue().getTypeId(), getApproval().getTypeId());
   }
-  
+
+  @Test(expected = BaseException.class)
+  public void noApproverFoundExceptionTest() {
+    Approval approval = getApproval();
+    approval.setApprovers(null);
+    when(approvalRepository.findOne(APPROVAL_ID)).thenReturn(approval);
+    try {
+      action.invoke(APPROVAL_ID, getStatusUpdateRequest());
+    } catch (BaseException e) {
+      verify(approvalRepository, times(1)).findOne(APPROVAL_ID);
+      assertEquals(e.getMessage(), Constants.APPROVER_NOT_CONFIGURED);
+      throw e;
+    }
+  }
+
+  @Test(expected = BaseException.class)
+  public void invalidStateTransitionTest() {
+    Approval approval = getApproval();
+    approval.setStatus("AP");
+    when(approvalRepository.findOne(APPROVAL_ID)).thenReturn(approval);
+    try {
+      action.invoke(APPROVAL_ID, getStatusUpdateRequest());
+    } catch (BaseException e) {
+      verify(approvalRepository, times(1)).findOne(APPROVAL_ID);
+      assertEquals(e.getMessage(), Constants.APPROVAL_NOT_PENDING);
+      throw e;
+    }
+  }
+
+  @Test(expected = BaseException.class)
+  public void messageIdRequiredTest() {
+    when(approvalRepository.findOne(APPROVAL_ID)).thenReturn(getApproval());
+    StatusUpdateRequest request = getStatusUpdateRequest();
+    request.setStatus("RJ");
+    request.setMessageId(null);
+    try {
+      action.invoke(APPROVAL_ID, request);
+    } catch (BaseException e) {
+      verify(approvalRepository, times(1)).findOne(APPROVAL_ID);
+      assertEquals(e.getMessage(), Constants.MESSAGE_ID_REQUIRED);
+      throw e;
+    }
+  }
+
+  @Test(expected = BaseException.class)
+  public void updatedByRequesterIdTest() {
+    when(approvalRepository.findOne(APPROVAL_ID)).thenReturn(getApproval());
+    StatusUpdateRequest request = getStatusUpdateRequest();
+    request.setUpdatedBy("R001");
+    try {
+      action.invoke(APPROVAL_ID, request);
+    } catch (BaseException e) {
+      verify(approvalRepository, times(1)).findOne(APPROVAL_ID);
+      assertEquals(e.getMessage(), Constants.UPDATED_BY_REQUSTER_ID);
+      throw e;
+    }
+  }
+
+  @Test(expected = BaseException.class)
+  public void requesterIdNotActiveTest() {
+    Approval approval = getApproval();
+    approval.setApprovers(Collections.singleton(new ApproverQueue(APPROVAL_ID, "U001", "QD",
+        "PRIMARY", null, null)));
+    when(approvalRepository.findOne(APPROVAL_ID)).thenReturn(approval);
+    try {
+      action.invoke(APPROVAL_ID, getStatusUpdateRequest());
+    } catch (BaseException e) {
+      verify(approvalRepository, times(1)).findOne(APPROVAL_ID);
+      assertEquals(e.getMessage(), Constants.REQUESTER_ID_NOT_ACTIVE);
+      throw e;
+    }
+  }
+
+  @Test(expected = BaseException.class)
+  public void requesterIdNotPresentTest() {
+    when(approvalRepository.findOne(APPROVAL_ID)).thenReturn(getApproval());
+    StatusUpdateRequest request = getStatusUpdateRequest();
+    request.setUpdatedBy("U999");
+    try {
+      action.invoke(APPROVAL_ID, request);
+    } catch (BaseException e) {
+      verify(approvalRepository, times(1)).findOne(APPROVAL_ID);
+      assertEquals(e.getMessage(), Constants.REQUESTER_NOT_PRESENT);
+      throw e;
+    }
+  }
+
   @Test(expected = BaseException.class)
   public void approvalNotFound() throws IOException {
     action.invoke("A456", getStatusUpdateRequest());
-    verify(approvalRepository, times(1)).findOne(APPROVAL_ID);
+    verify(approvalRepository, times(1)).findOne("A456");
   }
 }
