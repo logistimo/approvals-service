@@ -77,7 +77,7 @@ public class UpdateApprovalStatusActionTest {
     assertEquals(eventCaptor.getValue().getType(), getApproval().getType());
     assertEquals(eventCaptor.getValue().getTypeId(), getApproval().getTypeId());
   }
-
+  
   @Test(expected = BaseException.class)
   public void approvalNotFound() throws IOException {
     action.invoke("A456", getStatusUpdateRequest());

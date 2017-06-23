@@ -1,5 +1,7 @@
 package com.logistimo.approval.actions;
 
+import static com.logistimo.approval.utils.Constants.STATUS_HISTORY_NOT_FOUND;
+
 import com.logistimo.approval.entity.ApprovalStatusHistory;
 import com.logistimo.approval.exception.BaseException;
 import com.logistimo.approval.models.StatusResponse;
@@ -18,8 +20,6 @@ import org.springframework.util.CollectionUtils;
 
 @Component
 public class GetApprovalStatusHistoryAction {
-
-  public static final String STATUS_HISTORY_NOT_FOUND = "Status History not found for the approval with the id - ";
 
   @Autowired
   private IApprovalStatusHistoryRepository statusHistoryRepository;

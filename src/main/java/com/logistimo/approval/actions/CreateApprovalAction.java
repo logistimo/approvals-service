@@ -41,8 +41,6 @@ import org.springframework.util.CollectionUtils;
 @Component
 public class CreateApprovalAction {
 
-  private static final String APPROVAL_ALREADY_EXITS = "Approval already exits for the %s - %s in %s state.";
-
   @Autowired
   private IApprovalRepository approvalRepository;
 

@@ -34,7 +34,7 @@ public class Utility {
     approval.setId(APPROVAL_ID);
     approval.setType("order");
     approval.setTypeId("O001");
-    approval.setStatus("PENDING");
+    approval.setStatus("PN");
     approval.setRequesterId("R001");
     approval.setSourceDomainId(1L);
     approval.setConversationId("C001");
@@ -43,7 +43,7 @@ public class Utility {
     approval.setCreatedAt(new Date(2017, 05, 12, 16, 53, 24));
     approval.setUpdatedAt(new Date(2017, 05, 12, 16, 53, 24));
     approval.setDomains(Collections.singleton((new ApprovalDomainMapping(APPROVAL_ID, 16L))));
-    approval.setApprovers(Collections.singleton(new ApproverQueue(APPROVAL_ID, "U001", "QUEUED",
+    approval.setApprovers(Collections.singleton(new ApproverQueue(APPROVAL_ID, "U001", "AC",
         "PRIMARY", null, null)));
     approval.setAttributes(Collections.singleton(new ApprovalAttributes(APPROVAL_ID, "kioskId",
         "K001")));
@@ -83,8 +83,8 @@ public class Utility {
 
   public static StatusUpdateRequest getStatusUpdateRequest() {
     StatusUpdateRequest request = new StatusUpdateRequest();
-    request.setStatus("APPROVED");
-    request.setUpdatedBy("U002");
+    request.setStatus("AP");
+    request.setUpdatedBy("U001");
     request.setMessageId("M002");
     return request;
   }
