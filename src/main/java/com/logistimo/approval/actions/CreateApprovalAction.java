@@ -134,7 +134,7 @@ public class CreateApprovalAction {
       for (ApproverRequest approver : request.getApprovers()) {
         for (String userId : approver.getUserIds()) {
           String status = Constants.QUEUED_STATUS;
-          if (request.getApprovers().indexOf(approver) == 1) {
+          if (request.getApprovers().indexOf(approver) == 0) {
             status = Constants.ACTIVE_STATUS;
           }
           approverQueueRepository.save(new ApproverQueue(approval.getId(), userId, status,
