@@ -22,13 +22,13 @@ public class Constants {
   public static final String KEY_OR_VALUE_MISSING = "Either Attribute key or value is missing.";
   public static final String APPROVER_ID_NOT_PRESENT = "The param - approver_status cannot be present without approver_id.";
 
-  public static final String QUEUED_STATUS = "QD";
-  public static final String ACTIVE_STATUS = "AC";
-  public static final String EXPIRED_STATUS = "EX";
-  public static final String PENDING_STATUS = "PN";
-  public static final String APPROVED_STATUS = "AP";
-  public static final String REJECTED_STATUS = "RJ";
-  public static final String CANCELLED_STATUS = "CN";
+  public static final String QUEUED_STATUS = "qd";
+  public static final String ACTIVE_STATUS = "ac";
+  public static final String EXPIRED_STATUS = "ex";
+  public static final String PENDING_STATUS = "pn";
+  public static final String APPROVED_STATUS = "ap";
+  public static final String REJECTED_STATUS = "rj";
+  public static final String CANCELLED_STATUS = "cn";
 
   public static final String PENDING_OR_APPROVED_STATUS = "PENDING OR APPROVED";
 
