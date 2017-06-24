@@ -21,6 +21,7 @@ import com.logistimo.approval.repository.IApprovalRepository;
 import com.logistimo.approval.repository.IApprovalStatusHistoryRepository;
 import com.logistimo.approval.repository.IApproverQueueRepository;
 import com.logistimo.approval.utils.Constants;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Optional;
@@ -112,9 +113,9 @@ public class CreateApprovalAction {
     response.setCreatedAt(approval.getCreatedAt());
     response.setUpdatedAt(approval.getUpdatedAt());
 
+    response.setApprovers(new ArrayList<>());
     Optional.ofNullable(approverQueueRepository.findByApprovalId(approval.getId())).ifPresent(
-        l -> l.forEach(
-            item -> response.getApprovers().add(mapper.map(item, ApproverResponse.class))));
+        l -> l.forEach(x -> response.getApprovers().add(mapper.map(x, ApproverResponse.class))));
 
     return response;
   }
