@@ -97,7 +97,7 @@ public class ApprovalV1Controller {
       @RequestParam(value = "type", required = false) String type,
       @RequestParam(value = "type_id", required = false) String typeId,
       @RequestParam(value = "status", required = false) String status,
-      @RequestParam(value = "expiring_in", required = false) String expiringInMinutes,
+      @RequestParam(value = "expiring_in", required = false) Integer expiringInMinutes,
       @RequestParam(value = "requester_id", required = false) String requesterId,
       @RequestParam(value = "approver_id", required = false) String approverId,
       @RequestParam(value = "approver_status", required = false) String approverStatus,
@@ -112,7 +112,7 @@ public class ApprovalV1Controller {
   }
 
   private ApprovalFilters getApprovalFilters(int offset, int size, String requesterId,
-      String status, String expiringInMinutes, String approverId, String approverStatus,
+      String status, Integer expiringInMinutes, String approverId, String approverStatus,
       String type, String typeId, String orderedBy, String attributeKey, String attributeValue,
       int domainId) {
     ApprovalFilters filters = new ApprovalFilters();

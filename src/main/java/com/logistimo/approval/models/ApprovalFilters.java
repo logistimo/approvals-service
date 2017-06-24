@@ -24,7 +24,7 @@ public class ApprovalFilters {
 
   private String status;
 
-  private String expiringInMinutes;
+  private Integer expiringInMinutes;
 
   private String requesterId;
 
@@ -42,7 +42,7 @@ public class ApprovalFilters {
 
   public void validate() {
 
-    if (StringUtils.isNotEmpty(status) && StringUtils.isNotEmpty(expiringInMinutes) &&
+    if (StringUtils.isNotEmpty(status) && expiringInMinutes != null &&
         !StringUtils.equalsIgnoreCase(PENDING_STATUS, status)) {
       throw new BaseException(Response.SC_BAD_REQUEST, INVALID_STATUS_AND_EXPIRING_IN_COMBINATION);
     }
@@ -56,7 +56,7 @@ public class ApprovalFilters {
       throw new BaseException(Response.SC_BAD_REQUEST, KEY_OR_VALUE_MISSING);
     }
 
-    if (StringUtils.isNotEmpty(expiringInMinutes)) {
+    if (expiringInMinutes != null) {
       setStatus(PENDING_STATUS);
     }
   }

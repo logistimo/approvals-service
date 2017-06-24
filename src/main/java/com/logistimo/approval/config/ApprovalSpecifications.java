@@ -15,6 +15,13 @@ import org.springframework.data.jpa.domain.Specification;
 
 public class ApprovalSpecifications {
 
+  public static Specification<Approval> withDomainId(Long domainId) {
+    if (domainId == null) {
+      return null;
+    }
+
+    return (root, query, cb) -> cb.equal(root.get("sourceDomainId"), domainId);
+  }
 
   public static Specification<Approval> withRequesterId(String requesterId) {
     if (requesterId == null) {
@@ -44,12 +51,12 @@ public class ApprovalSpecifications {
     return (root, query, cb) -> cb.equal(root.get("typeId"), typeId);
   }
 
-  public static Specification<Approval> withExpiringInMinutes(String mins) {
+  public static Specification<Approval> withExpiringInMinutes(Integer mins) {
     if (mins == null) {
       return null;
     }
     return (root, query, cb) -> {
-      Date currentDatePlusExpiryMinutes = DateUtils.addMinutes(new Date(), Integer.parseInt(mins));
+      Date currentDatePlusExpiryMinutes = DateUtils.addMinutes(new Date(), mins);
       Path<Date> expireAtPath = root.get("expireAt");
       return cb.lessThan(expireAtPath, currentDatePlusExpiryMinutes);
     };
@@ -97,17 +104,6 @@ public class ApprovalSpecifications {
     return (root, criteriaQuery, criteriaBuilder) -> {
       Join<Approval, ApprovalAttributes> attributes = root.join("attributes");
       return criteriaBuilder.equal(attributes.get("value"), value);
-    };
-  }
-
-  public static Specification<Approval> withDomainId(Long domainId) {
-    if (domainId == null) {
-      return null;
-    }
-
-    return (root, criteriaQuery, criteriaBuilder) -> {
-      Join<Approval, ApprovalAttributes> attributes = root.join("domains");
-      return criteriaBuilder.equal(attributes.get("domainId"), domainId);
     };
   }
 }
