@@ -83,20 +83,6 @@ public class UpdateApprovalStatusActionTest {
   }
 
   @Test(expected = BaseException.class)
-  public void noApproverFoundExceptionTest() {
-    Approval approval = getApproval();
-    approval.setApprovers(null);
-    when(approvalRepository.findOne(APPROVAL_ID)).thenReturn(approval);
-    try {
-      action.invoke(APPROVAL_ID, getStatusUpdateRequest());
-    } catch (BaseException e) {
-      verify(approvalRepository, times(1)).findOne(APPROVAL_ID);
-      assertEquals(e.getMessage(), Constants.APPROVER_NOT_CONFIGURED);
-      throw e;
-    }
-  }
-
-  @Test(expected = BaseException.class)
   public void invalidStateTransitionTest() {
     Approval approval = getApproval();
     approval.setStatus("AP");
@@ -164,6 +150,20 @@ public class UpdateApprovalStatusActionTest {
     } catch (BaseException e) {
       verify(approvalRepository, times(1)).findOne(APPROVAL_ID);
       assertEquals(e.getMessage(), Constants.REQUESTER_NOT_PRESENT);
+      throw e;
+    }
+  }
+
+  @Test(expected = BaseException.class)
+  public void requesterIdCannotBeApproverTest() {
+    when(approvalRepository.findOne(APPROVAL_ID)).thenReturn(getApproval());
+    StatusUpdateRequest request = getStatusUpdateRequest();
+    request.setStatus("CN");
+    try {
+      action.invoke(APPROVAL_ID, request);
+    } catch (BaseException e) {
+      verify(approvalRepository, times(1)).findOne(APPROVAL_ID);
+      assertEquals(e.getMessage(), Constants.REQUESTER_ID_CANNOT_BE_AN_APPROVER);
       throw e;
     }
   }
