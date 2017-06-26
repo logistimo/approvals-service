@@ -16,5 +16,5 @@ public class StatusUpdateRequest {
   @NotNull(message = "Updated By cannot be null.")
   private String updatedBy;
 
-  private String messageId;
+  private String message;
 }

@@ -1,7 +1,6 @@
 package com.logistimo.approval.actions;
 
-import static com.logistimo.approval.utils.Utility.*;
-import static com.logistimo.approval.utils.Utility.getApprovalDomainMappings;
+import static com.logistimo.approval.utils.TestUtility.*;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;

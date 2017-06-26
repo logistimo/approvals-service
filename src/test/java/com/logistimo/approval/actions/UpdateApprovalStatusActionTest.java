@@ -1,9 +1,10 @@
 package com.logistimo.approval.actions;
 
-import static com.logistimo.approval.utils.Utility.*;
-import static com.logistimo.approval.utils.Utility.getApproval;
-import static com.logistimo.approval.utils.Utility.getStatusUpdateRequest;
+import static com.logistimo.approval.utils.TestUtility.*;
+import static com.logistimo.approval.utils.TestUtility.getApproval;
+import static com.logistimo.approval.utils.TestUtility.getStatusUpdateRequest;
 import static org.mockito.Matchers.any;
+import static org.mockito.Matchers.anyString;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
@@ -19,7 +20,8 @@ import com.logistimo.approval.models.StatusUpdateRequest;
 import com.logistimo.approval.repository.IApprovalRepository;
 import com.logistimo.approval.repository.IApprovalStatusHistoryRepository;
 import com.logistimo.approval.utils.Constants;
-import com.logistimo.approval.utils.JmsUtil;
+import com.logistimo.approval.utils.TestUtility;
+import com.logistimo.approval.utils.Utility;
 import java.io.IOException;
 import java.util.Collections;
 import org.junit.Before;
@@ -47,7 +49,7 @@ public class UpdateApprovalStatusActionTest {
   private IApprovalStatusHistoryRepository statusHistoryRepository;
 
   @Mock
-  private JmsUtil jmsUtil;
+  private Utility utility;
 
   @InjectMocks
   private UpdateApprovalStatusAction action;
@@ -73,7 +75,8 @@ public class UpdateApprovalStatusActionTest {
     verify(approvalRepository, times(1)).findOne(APPROVAL_ID);
     verify(approvalRepository, times(1)).save(any(Approval.class));
     verify(statusHistoryRepository, times(2)).save(any(ApprovalStatusHistory.class));
-    verify(jmsUtil, times(1)).sendMessage(eventCaptor.capture());
+    verify(utility, times(1)).publishStatusUpdateEvent(eventCaptor.capture());
+    verify(utility, times(1)).addMessageToConversation(anyString(), anyString(), anyString(), any());
 
     assertEquals(eventCaptor.getValue().getStatus(), request.getStatus());
     assertEquals(eventCaptor.getValue().getUpdatedBy(), request.getUpdatedBy());
@@ -101,7 +104,7 @@ public class UpdateApprovalStatusActionTest {
     when(approvalRepository.findOne(APPROVAL_ID)).thenReturn(getApproval());
     StatusUpdateRequest request = getStatusUpdateRequest();
     request.setStatus("RJ");
-    request.setMessageId(null);
+    request.setMessage(null);
     try {
       action.invoke(APPROVAL_ID, request);
     } catch (BaseException e) {

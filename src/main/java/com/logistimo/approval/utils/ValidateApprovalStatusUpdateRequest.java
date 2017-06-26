@@ -36,7 +36,7 @@ public class ValidateApprovalStatusUpdateRequest {
       throw new BaseException(Response.SC_BAD_REQUEST, UPDATED_BY_REQUSTER_ID);
     }
 
-    if (StringUtils.isEmpty(request.getMessageId()) && (
+    if (StringUtils.isEmpty(request.getMessage()) && (
         REJECTED_STATUS.equalsIgnoreCase(request.getStatus()) ||
             CANCELLED_STATUS.equalsIgnoreCase(request.getStatus()))) {
       throw new BaseException(Response.SC_BAD_REQUEST, MESSAGE_ID_REQUIRED);

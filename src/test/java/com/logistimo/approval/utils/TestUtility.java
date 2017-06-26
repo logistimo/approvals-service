@@ -15,13 +15,12 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.Date;
 import java.util.List;
-import org.springframework.util.CollectionUtils;
 
 /**
  * Created by nitisha.khandelwal on 23/05/17.
  */
 
-public class Utility {
+public class TestUtility {
 
   public static final String APPROVAL_ID = "A123";
 
@@ -85,7 +84,7 @@ public class Utility {
     StatusUpdateRequest request = new StatusUpdateRequest();
     request.setStatus("AP");
     request.setUpdatedBy("U001");
-    request.setMessageId("M002");
+    request.setMessage("This is a message.");
     return request;
   }
 

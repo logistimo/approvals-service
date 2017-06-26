@@ -1,7 +1,7 @@
 package com.logistimo.approval.actions;
 
-import static com.logistimo.approval.utils.Utility.APPROVAL_ID;
-import static com.logistimo.approval.utils.Utility.getApprovalStatusHistories;
+import static com.logistimo.approval.utils.TestUtility.APPROVAL_ID;
+import static com.logistimo.approval.utils.TestUtility.getApprovalStatusHistories;
 import static junit.framework.TestCase.assertEquals;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;

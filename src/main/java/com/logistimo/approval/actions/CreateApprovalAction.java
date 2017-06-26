@@ -2,9 +2,7 @@ package com.logistimo.approval.actions;
 
 import static com.logistimo.approval.utils.Constants.*;
 
-import com.logistimo.approval.conversationclient.IConversationClient;
 import com.logistimo.approval.conversationclient.request.PostMessageResponse;
-import com.logistimo.approval.conversationclient.response.PostMessageRequest;
 import com.logistimo.approval.entity.Approval;
 import com.logistimo.approval.entity.ApprovalAttributes;
 import com.logistimo.approval.entity.ApprovalDomainMapping;
@@ -21,6 +19,7 @@ import com.logistimo.approval.repository.IApprovalRepository;
 import com.logistimo.approval.repository.IApprovalStatusHistoryRepository;
 import com.logistimo.approval.repository.IApproverQueueRepository;
 import com.logistimo.approval.utils.Constants;
+import com.logistimo.approval.utils.Utility;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -58,7 +57,7 @@ public class CreateApprovalAction {
   private IApprovalDomainMappingRepository approvalDomainMappingRepository;
 
   @Autowired
-  private IConversationClient conversationClient;
+  private Utility utility;
 
   private static final Logger log = LoggerFactory.getLogger(CreateApprovalAction.class);
 
@@ -76,7 +75,8 @@ public class CreateApprovalAction {
 
     String approvalId = UUID.randomUUID().toString().replace("-", "");
 
-    PostMessageResponse postMessageResponse = createConversation(approvalId, request);
+    PostMessageResponse postMessageResponse = utility.addMessageToConversation(approvalId,
+        request.getMessage(), request.getRequesterId(), request.getSourceDomainId());
 
     Approval approval = getApproval(approvalId, request, postMessageResponse.getConversationId());
     Approval approvalFromDB = approvalRepository.save(approval);
@@ -92,12 +92,6 @@ public class CreateApprovalAction {
   private void createApprovalDomainMapping(String approvalId, ApprovalRequest request) {
     Optional.ofNullable(request.getDomains()).ifPresent(l -> l.forEach(
         item -> approvalDomainMappingRepository.save(new ApprovalDomainMapping(approvalId, item))));
-  }
-
-  private PostMessageResponse createConversation(String approvalId, ApprovalRequest request) {
-    PostMessageRequest postMessageRequest = new PostMessageRequest(request.getMessage(),
-        request.getRequesterId(), request.getSourceDomainId());
-    return conversationClient.postMessage(postMessageRequest, "APPROVAL", approvalId);
   }
 
   private ApprovalResponse generateResponse(ApprovalRequest request, Approval approval) {

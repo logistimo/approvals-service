@@ -9,7 +9,7 @@ import com.logistimo.approval.models.ApprovalStatusUpdateEvent;
 import com.logistimo.approval.models.StatusUpdateRequest;
 import com.logistimo.approval.repository.IApprovalRepository;
 import com.logistimo.approval.repository.IApprovalStatusHistoryRepository;
-import com.logistimo.approval.utils.JmsUtil;
+import com.logistimo.approval.utils.Utility;
 import java.util.Date;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -28,7 +28,7 @@ public class UpdateApprovalStatusAction {
   private IApprovalStatusHistoryRepository statusHistoryRepository;
 
   @Autowired
-  private JmsUtil jmsUtil;
+  private Utility utility;
 
   public Void invoke(String approvalId, StatusUpdateRequest request) {
 
@@ -47,9 +47,12 @@ public class UpdateApprovalStatusAction {
     statusHistoryRepository.save(lastStatus);
 
     ApprovalStatusHistory currentStatus = statusHistoryRepository.save(new ApprovalStatusHistory(
-        approvalId, request.getStatus(), request.getUpdatedBy(), request.getMessageId(), now));
+        approvalId, request.getStatus(), request.getUpdatedBy(), request.getMessage(), now));
 
-    jmsUtil.sendMessage(new ApprovalStatusUpdateEvent(approval.getId(),
+    utility.addMessageToConversation(approvalId, request.getMessage(), request.getUpdatedBy(),
+        null);
+
+    utility.publishStatusUpdateEvent(new ApprovalStatusUpdateEvent(approval.getId(),
         approval.getType(), approval.getTypeId(), approval.getStatus(),
         approval.getUpdatedBy(), currentStatus.getStartTime()));
 
