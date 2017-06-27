@@ -6,12 +6,13 @@ package com.logistimo.approval.utils;
 
 public class Constants {
 
+  public static final String COMMA = ",";
+
   public static final String APPROVAL_ALREADY_EXITS = "Approval already exits for the %s - %s in %s state.";
   public static final String STATUS_HISTORY_NOT_FOUND = "Status History not found for the approval with the id - ";
 
   public static final String MESSAGE_ID_REQUIRED = "Message Id is required for the rejection and cancellation of the approval.";
   public static final String REQUESTER_ID_NOT_ACTIVE = "Requester Id is not in the ACTIVE approver queue.";
-  public static final String APPROVER_NOT_CONFIGURED = "Approver Queue have not been configured for this approval.";
   public static final String REQUESTER_NOT_PRESENT = "Requester Id is not present in any of the approver queue.";
   public static final String UPDATED_BY_REQUSTER_ID = "Status of the approval cannot be updated by the requester of the approval.";
   public static final String REQUESTER_ID_CANNOT_BE_AN_APPROVER = "Requester Id cannot be an approver in case of cancellation.";
@@ -21,6 +22,7 @@ public class Constants {
   public static final String INVALID_STATUS_AND_EXPIRING_IN_COMBINATION = "The param - expiring_in can only be used with PENDING status.";
   public static final String KEY_OR_VALUE_MISSING = "Either Attribute key or value is missing.";
   public static final String APPROVER_ID_NOT_PRESENT = "The param - approver_status cannot be present without approver_id.";
+  public static final String INCORRECT_SORT_PARAM = "Either + or - missing from the one of the Sort params.";
 
   public static final String QUEUED_STATUS = "qd";
   public static final String ACTIVE_STATUS = "ac";

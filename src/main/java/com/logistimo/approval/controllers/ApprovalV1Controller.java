@@ -104,16 +104,16 @@ public class ApprovalV1Controller {
       @RequestParam(value = "attribute_key", required = false) String attributeKey,
       @RequestParam(value = "attribute_value", required = false) String attributeValue,
       @RequestParam(value = "domain_id") int domainId,
-      @RequestParam(value = "ordered_by", required = false) String orderedBy) {
+      @RequestParam(value = "sort", required = false) String sort) {
     ApprovalFilters filters = getApprovalFilters(offset, size, requesterId, status,
-        expiringInMinutes, approverId, approverStatus, type, typeId, orderedBy,
-        attributeKey, attributeValue, domainId);
+        expiringInMinutes, approverId, approverStatus, type, typeId, sort, attributeKey,
+        attributeValue, domainId);
     return getFilteredApprovalsAction.invoke(filters);
   }
 
   private ApprovalFilters getApprovalFilters(int offset, int size, String requesterId,
       String status, Integer expiringInMinutes, String approverId, String approverStatus,
-      String type, String typeId, String orderedBy, String attributeKey, String attributeValue,
+      String type, String typeId, String sort, String attributeKey, String attributeValue,
       int domainId) {
     ApprovalFilters filters = new ApprovalFilters();
     filters.setOffset(offset);
@@ -125,7 +125,7 @@ public class ApprovalV1Controller {
     filters.setApproverStatus(approverStatus);
     filters.setType(type);
     filters.setTypeId(typeId);
-    filters.setOrderedBy(orderedBy);
+    filters.setSort(sort);
     filters.setAttributeKey(attributeKey);
     filters.setAttributeValue(attributeValue);
     filters.setDomainId(domainId);

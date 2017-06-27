@@ -3,9 +3,15 @@ package com.logistimo.approval.models;
 import static com.logistimo.approval.utils.Constants.*;
 
 import com.logistimo.approval.exception.BaseException;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 import lombok.Data;
 import org.apache.catalina.connector.Response;
 import org.apache.commons.lang.StringUtils;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.domain.Sort.Direction;
+import org.springframework.data.domain.Sort.Order;
 
 /**
  * Created by nitisha.khandelwal on 12/06/17.
@@ -14,6 +20,9 @@ import org.apache.commons.lang.StringUtils;
 @Data
 public class ApprovalFilters {
 
+  public static final String COLON = ":";
+  public static final String ASCENDING = "ASC";
+  public static final String DESCENDING = "DESC";
   private int offset;
 
   private int size;
@@ -38,7 +47,9 @@ public class ApprovalFilters {
 
   private int domainId;
 
-  private String orderedBy;
+  private String sort;
+
+  private Sort dataSort;
 
   public void validate() {
 
@@ -58,6 +69,22 @@ public class ApprovalFilters {
 
     if (expiringInMinutes != null) {
       setStatus(PENDING_STATUS);
+    }
+
+    if (StringUtils.isNotEmpty(sort)) {
+      List<Order> orders = new ArrayList<>();
+      for (String sortParam : Arrays.asList(sort.split(COMMA))) {
+        int colonIndex = sortParam.indexOf(COLON);
+        String direction = sortParam.substring(colonIndex+1, sortParam.length());
+        if (direction.equalsIgnoreCase(ASCENDING)) {
+          orders.add(new Order(Direction.ASC, sortParam.substring(0, colonIndex)));
+        } else if (direction.equalsIgnoreCase(DESCENDING)) {
+          orders.add(new Order(Direction.DESC, sortParam.substring(0, colonIndex)));
+        } else {
+          throw new BaseException(Response.SC_BAD_REQUEST, INCORRECT_SORT_PARAM);
+        }
+      }
+      dataSort = new Sort(orders);
     }
   }
 }

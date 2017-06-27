@@ -24,7 +24,7 @@ public class GetFilteredApprovalsAction {
 
   public Page<Approval> invoke(ApprovalFilters filters) {
 
-    Pageable pageable = new PageRequest(filters.getOffset(), filters.getSize());
+    Pageable pageable = new PageRequest(filters.getOffset(), filters.getSize(), filters.getDataSort());
 
     return approvalCustomRepository.findAll(
         where(ApprovalSpecifications.withRequesterId(filters.getRequesterId()))
