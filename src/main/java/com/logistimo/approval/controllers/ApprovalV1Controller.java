@@ -20,6 +20,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
+import org.springframework.boot.autoconfigure.condition.ConditionMessage.Builder;
 import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.transaction.annotation.Transactional;
@@ -104,16 +105,16 @@ public class ApprovalV1Controller {
       @RequestParam(value = "attribute_key", required = false) String attributeKey,
       @RequestParam(value = "attribute_value", required = false) String attributeValue,
       @RequestParam(value = "domain_id") int domainId,
-      @RequestParam(value = "sort", required = false) String sort) {
+      @RequestParam(value = "sort", required = false) String sortQuery) {
     ApprovalFilters filters = getApprovalFilters(offset, size, requesterId, status,
-        expiringInMinutes, approverId, approverStatus, type, typeId, sort, attributeKey,
+        expiringInMinutes, approverId, approverStatus, type, typeId, sortQuery, attributeKey,
         attributeValue, domainId);
     return getFilteredApprovalsAction.invoke(filters);
   }
 
   private ApprovalFilters getApprovalFilters(int offset, int size, String requesterId,
       String status, Integer expiringInMinutes, String approverId, String approverStatus,
-      String type, String typeId, String sort, String attributeKey, String attributeValue,
+      String type, String typeId, String sortQuery, String attributeKey, String attributeValue,
       int domainId) {
     ApprovalFilters filters = new ApprovalFilters();
     filters.setOffset(offset);
@@ -125,7 +126,7 @@ public class ApprovalV1Controller {
     filters.setApproverStatus(approverStatus);
     filters.setType(type);
     filters.setTypeId(typeId);
-    filters.setSort(sort);
+    filters.setSortQuery(sortQuery);
     filters.setAttributeKey(attributeKey);
     filters.setAttributeValue(attributeValue);
     filters.setDomainId(domainId);
