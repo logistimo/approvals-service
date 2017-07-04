@@ -81,4 +81,7 @@ dependencies {
     compile 'org.apache.camel:camel-gson:' + camelVersion
 
     testCompile 'org.springframework.boot:spring-boot-starter-test'
+
+    testCompile group: 'org.hsqldb', name: 'hsqldb', version: '2.4.0'
+
 }
