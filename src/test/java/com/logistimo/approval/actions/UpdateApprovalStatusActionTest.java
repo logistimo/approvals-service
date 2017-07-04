@@ -20,7 +20,6 @@ import com.logistimo.approval.models.StatusUpdateRequest;
 import com.logistimo.approval.repository.IApprovalRepository;
 import com.logistimo.approval.repository.IApprovalStatusHistoryRepository;
 import com.logistimo.approval.utils.Constants;
-import com.logistimo.approval.utils.TestUtility;
 import com.logistimo.approval.utils.Utility;
 import java.io.IOException;
 import java.util.Collections;
@@ -75,7 +74,7 @@ public class UpdateApprovalStatusActionTest {
     verify(approvalRepository, times(1)).findOne(APPROVAL_ID);
     verify(approvalRepository, times(1)).save(any(Approval.class));
     verify(statusHistoryRepository, times(2)).save(any(ApprovalStatusHistory.class));
-    verify(utility, times(1)).publishStatusUpdateEvent(eventCaptor.capture());
+    verify(utility, times(1)).publishApprovalStatusUpdateEvent(eventCaptor.capture());
     verify(utility, times(1)).addMessageToConversation(anyString(), anyString(), anyString(), any());
 
     assertEquals(eventCaptor.getValue().getStatus(), request.getStatus());
@@ -132,7 +131,7 @@ public class UpdateApprovalStatusActionTest {
   public void requesterIdNotActiveTest() {
     Approval approval = getApproval();
     approval.setApprovers(Collections.singleton(new ApproverQueue(APPROVAL_ID, "U001", "QD",
-        "PRIMARY", null, null)));
+        "PRIMARY", 1L, null, null)));
     when(approvalRepository.findOne(APPROVAL_ID)).thenReturn(approval);
     try {
       action.invoke(APPROVAL_ID, getStatusUpdateRequest());

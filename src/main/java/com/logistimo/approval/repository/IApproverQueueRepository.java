@@ -11,7 +11,9 @@ import org.springframework.data.repository.CrudRepository;
 
 public interface IApproverQueueRepository extends CrudRepository<ApproverQueue, Long> {
 
-  @Query(value = "SELECT * FROM approver_queue WHERE approval_id = ?1", nativeQuery = true)
+  @Query(value = "SELECT * FROM approver_queue WHERE approval_id = ?1 ORDER BY start_time", nativeQuery = true)
   List<ApproverQueue> findByApprovalId(String approvalId);
 
+  @Query(value = "SELECT * FROM approver_queue WHERE approval_id = ?1 AND queue_id = ?2 ORDER BY start_time", nativeQuery = true)
+  List<ApproverQueue> findByApprovalIdAndQueueId(String approvalId, Long queueId);
 }

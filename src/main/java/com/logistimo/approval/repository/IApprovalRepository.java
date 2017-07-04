@@ -5,6 +5,7 @@ import java.util.List;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.CrudRepository;
 
+
 /**
  * Created by nitisha.khandelwal on 09/05/17.
  */

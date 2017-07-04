@@ -13,24 +13,21 @@ import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 
 /**
- * Created by nitisha.khandelwal on 10/05/17.
+ * Created by nitisha.khandelwal on 30/06/17.
  */
 
 @Data
 @Entity
 @NoArgsConstructor
-@Table(name = "approver_queue")
-public class ApproverQueue {
+@Table(name = "tasks")
+public class Task {
 
-  public ApproverQueue(String approvalId, String userId, String approverStatus,
-      String type, Long queueId, Date startTime, Date endTime) {
+  public Task(String approvalId, Long queueId, String type, Date runTime, String status) {
     this.approvalId = approvalId;
-    this.userId = userId;
-    this.approverStatus = approverStatus;
-    this.type = type;
     this.queueId = queueId;
-    this.startTime = startTime;
-    this.endTime = endTime;
+    this.type = type;
+    this.runTime = runTime;
+    this.status = status;
   }
 
   @Id
@@ -38,29 +35,23 @@ public class ApproverQueue {
   @Column(name = "id", nullable = false, updatable = false)
   private Long id;
 
-  @Column(name = "approval_id")
+  @Column(name = "approval_id", nullable = false)
   private String approvalId;
-
-  @Column(name = "user_id")
-  private String userId;
-
-  @Column(name = "approver_status")
-  private String approverStatus;
-
-  @Column(name = "type")
-  private String type;
 
   @Column(name = "queue_id")
   private Long queueId;
 
-  @Column(name = "start_time")
-  private Date startTime;
+  @Column(name = "type")
+  private String type;
 
-  @Column(name = "end_time")
-  private Date endTime;
+  @Column(name = "run_time")
+  private Date runTime;
+
+  @Column(name = "status")
+  private String status;
 
   @CreationTimestamp
-  @Column(name = "created_at", updatable = false, nullable = false)
+  @Column(name = "created_at", nullable = false, updatable = false)
   private Date createdAt;
 
   @UpdateTimestamp

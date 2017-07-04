@@ -11,7 +11,6 @@ import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 import com.logistimo.approval.conversationclient.request.PostMessageResponse;
-import com.logistimo.approval.conversationclient.response.PostMessageRequest;
 import com.logistimo.approval.entity.Approval;
 import com.logistimo.approval.entity.ApprovalAttributes;
 import com.logistimo.approval.entity.ApprovalDomainMapping;
@@ -23,6 +22,7 @@ import com.logistimo.approval.repository.IApprovalDomainMappingRepository;
 import com.logistimo.approval.repository.IApprovalRepository;
 import com.logistimo.approval.repository.IApprovalStatusHistoryRepository;
 import com.logistimo.approval.repository.IApproverQueueRepository;
+import com.logistimo.approval.repository.ITaskRepository;
 import com.logistimo.approval.utils.Utility;
 import java.io.IOException;
 import java.util.Collections;
@@ -32,6 +32,7 @@ import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit4.SpringRunner;
 
@@ -57,6 +58,9 @@ public class CreateApprovalActionTest {
 
   @Mock
   private IApprovalDomainMappingRepository approvalDomainMappingRepository;
+
+  @Mock
+  private ITaskRepository taskRepository;
 
   @Mock
   private Utility utility;

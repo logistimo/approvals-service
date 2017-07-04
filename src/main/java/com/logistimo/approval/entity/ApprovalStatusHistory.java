@@ -33,7 +33,7 @@ public class ApprovalStatusHistory {
 
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)
-  @Column(name = "id")
+  @Column(name = "id", nullable = false, updatable = false)
   private Long id;
 
   @Column(name = "approval_id")
@@ -49,7 +49,7 @@ public class ApprovalStatusHistory {
   private String messageId;
 
   @CreationTimestamp
-  @Column(name = "start_time")
+  @Column(name = "start_time", updatable = false, nullable = false)
   private Date startTime;
 
   @Column(name = "end_time")

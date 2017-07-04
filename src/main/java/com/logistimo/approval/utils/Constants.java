@@ -12,6 +12,10 @@ public class Constants {
   public static final String DESCENDING = "DESC";
   public static final String DEFAULT_SORT_ORDER = "createdAt:DESC";
 
+  public static final String CONVERSATION_TYPE = "APPROVAL";
+
+  public static final String STATUS_UPDATED_BY = "CRON_JOB";
+
   public static final String APPROVAL_ALREADY_EXITS = "Approval already exits for the %s - %s in %s state.";
   public static final String STATUS_HISTORY_NOT_FOUND = "Status History not found for the approval with the id - ";
 
@@ -27,6 +31,12 @@ public class Constants {
   public static final String KEY_OR_VALUE_MISSING = "Either Attribute key or value is missing.";
   public static final String APPROVER_ID_NOT_PRESENT = "The param - approver_status cannot be present without approver_id.";
   public static final String INCORRECT_SORT_PARAM = "Either ASC or DESC missing from the one of the Sort params.";
+
+  public static final String EXPIRY_TASK = "EXPIRY";
+  public static final String ACTIVATION_TASK = "ACTIVATION";
+  public static final String TASK_QUEUED = "qd";
+  public static final String TASK_ACTIVE = "ac";
+  public static final String TASK_DONE = "dn";
 
   public static final String QUEUED_STATUS = "qd";
   public static final String ACTIVE_STATUS = "ac";

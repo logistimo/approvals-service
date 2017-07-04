@@ -1,18 +1,11 @@
 package com.logistimo.approval.models;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import com.logistimo.approval.exception.BaseException;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
-import javax.validation.ConstraintViolation;
-import javax.validation.Validation;
-import javax.validation.Validator;
 import javax.validation.constraints.NotNull;
 
 import lombok.Data;
-import org.apache.catalina.connector.Response;
-import org.springframework.util.CollectionUtils;
 
 /**
  * Created by nitisha.khandelwal on 10/05/17.

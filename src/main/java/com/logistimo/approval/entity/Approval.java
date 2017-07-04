@@ -45,6 +45,9 @@ public class Approval {
   @Column(name = "conversation_id")
   private String conversationId;
 
+  @Column(name = "approver_queues_count")
+  private Long approverQueuesCount;
+
   @Column(name = "updated_by")
   private String updatedBy;
 
@@ -60,7 +63,7 @@ public class Approval {
   private Date createdAt;
 
   @UpdateTimestamp
-  @Column(name = "updated_at")
+  @Column(name = "updated_at", nullable = false)
   private Date updatedAt;
 
   @OneToMany(fetch = FetchType.LAZY)

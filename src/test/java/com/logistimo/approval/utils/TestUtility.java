@@ -43,7 +43,7 @@ public class TestUtility {
     approval.setUpdatedAt(new Date(2017, 05, 12, 16, 53, 24));
     approval.setDomains(Collections.singleton((new ApprovalDomainMapping(APPROVAL_ID, 16L))));
     approval.setApprovers(Collections.singleton(new ApproverQueue(APPROVAL_ID, "U001", "AC",
-        "PRIMARY", null, null)));
+        "PRIMARY", 1L, null, null)));
     approval.setAttributes(Collections.singleton(new ApprovalAttributes(APPROVAL_ID, "kioskId",
         "K001")));
     return approval;

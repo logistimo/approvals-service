@@ -52,7 +52,7 @@ public class UpdateApprovalStatusAction {
     utility.addMessageToConversation(approvalId, request.getMessage(), request.getUpdatedBy(),
         null);
 
-    utility.publishStatusUpdateEvent(new ApprovalStatusUpdateEvent(approval.getId(),
+    utility.publishApprovalStatusUpdateEvent(new ApprovalStatusUpdateEvent(approval.getId(),
         approval.getType(), approval.getTypeId(), approval.getStatus(),
         approval.getUpdatedBy(), currentStatus.getStartTime()));
 

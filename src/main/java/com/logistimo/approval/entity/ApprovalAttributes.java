@@ -27,7 +27,7 @@ public class ApprovalAttributes {
 
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)
-  @Column(name = "id")
+  @Column(name = "id", nullable = false, updatable = false)
   private Long id;
 
   @Column(name = "approval_id")

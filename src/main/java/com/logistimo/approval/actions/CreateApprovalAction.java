@@ -8,6 +8,7 @@ import com.logistimo.approval.entity.ApprovalAttributes;
 import com.logistimo.approval.entity.ApprovalDomainMapping;
 import com.logistimo.approval.entity.ApprovalStatusHistory;
 import com.logistimo.approval.entity.ApproverQueue;
+import com.logistimo.approval.entity.Task;
 import com.logistimo.approval.exception.BaseException;
 import com.logistimo.approval.models.ApprovalRequest;
 import com.logistimo.approval.models.ApprovalResponse;
@@ -18,6 +19,7 @@ import com.logistimo.approval.repository.IApprovalDomainMappingRepository;
 import com.logistimo.approval.repository.IApprovalRepository;
 import com.logistimo.approval.repository.IApprovalStatusHistoryRepository;
 import com.logistimo.approval.repository.IApproverQueueRepository;
+import com.logistimo.approval.repository.ITaskRepository;
 import com.logistimo.approval.utils.Constants;
 import com.logistimo.approval.utils.Utility;
 import java.util.ArrayList;
@@ -57,6 +59,9 @@ public class CreateApprovalAction {
   private IApprovalDomainMappingRepository approvalDomainMappingRepository;
 
   @Autowired
+  private ITaskRepository taskRepository;
+
+  @Autowired
   private Utility utility;
 
   private static final Logger log = LoggerFactory.getLogger(CreateApprovalAction.class);
@@ -82,7 +87,7 @@ public class CreateApprovalAction {
     Approval approvalFromDB = approvalRepository.save(approval);
 
     createApprovalStatusHistory(approval, postMessageResponse.getMessageId());
-    createApproversQueue(approval, request);
+    createApproversQueue(approvalFromDB, request);
     createApprovalAttributes(approvalId, request);
     createApprovalDomainMapping(approvalId, request);
 
@@ -90,6 +95,7 @@ public class CreateApprovalAction {
   }
 
   private void createApprovalDomainMapping(String approvalId, ApprovalRequest request) {
+
     Optional.ofNullable(request.getDomains()).ifPresent(l -> l.forEach(
         item -> approvalDomainMappingRepository.save(new ApprovalDomainMapping(approvalId, item))));
   }
@@ -106,7 +112,7 @@ public class CreateApprovalAction {
     response.setExpireAt(approval.getExpireAt());
     response.setCreatedAt(approval.getCreatedAt());
     response.setUpdatedAt(approval.getUpdatedAt());
-
+    response.setActiveApproverType(request.getApprovers().get(0).getType());
     response.setApprovers(new ArrayList<>());
     Optional.ofNullable(approverQueueRepository.findByApprovalId(approval.getId())).ifPresent(
         l -> l.forEach(x -> response.getApprovers().add(mapper.map(x, ApproverResponse.class))));
@@ -124,31 +130,41 @@ public class CreateApprovalAction {
   }
 
   private void createApproversQueue(Approval approval, ApprovalRequest request) {
+
     if (!CollectionUtils.isEmpty(request.getApprovers())) {
+
+      Long queueId = 1L;
       Date startTime = approval.getCreatedAt();
       for (ApproverRequest approver : request.getApprovers()) {
-        for (String userId : approver.getUserIds()) {
-          String status = Constants.QUEUED_STATUS;
-          if (request.getApprovers().indexOf(approver) == 0) {
-            status = Constants.ACTIVE_STATUS;
-          }
-          approverQueueRepository.save(new ApproverQueue(approval.getId(), userId, status,
-              approver.getType(), startTime, DateUtils.addHours(startTime, approver.getExpiry())));
+
+        Date expiryTime = DateUtils.addHours(startTime, approver.getExpiry());
+        String status = Constants.QUEUED_STATUS;
+
+        if (queueId == 1L) {
+          status = Constants.ACTIVE_STATUS;
         }
+
+        for (String userId : approver.getUserIds()) {
+          approverQueueRepository.save(new ApproverQueue(approval.getId(), userId, status,
+              approver.getType(), queueId, startTime, expiryTime));
+        }
+
+        taskRepository.save(new Task(approval.getId(), queueId, EXPIRY_TASK, expiryTime, TASK_QUEUED));
+
         startTime = DateUtils.addHours(startTime, approver.getExpiry());
+        queueId += 1;
       }
     }
   }
 
   private void createApprovalStatusHistory(Approval approval, String messageId) {
-    ApprovalStatusHistory approvalStatusHistory = new ApprovalStatusHistory(approval.getId(),
-        approval.getStatus(), approval.getRequesterId(), messageId, null);
-    approvalStatusHistoryRepository.save(approvalStatusHistory);
+
+    approvalStatusHistoryRepository.save(new ApprovalStatusHistory(approval.getId(),
+        approval.getStatus(), approval.getRequesterId(), messageId, null));
   }
 
   private Approval getApproval(String approvalId, ApprovalRequest request, String conversationId) {
 
-    Date now = new Date();
     Approval approval = new Approval();
     approval.setId(approvalId);
     approval.setStatus(Constants.PENDING_STATUS);
@@ -157,10 +173,18 @@ public class CreateApprovalAction {
     approval.setTypeId(request.getTypeId());
     approval.setRequesterId(request.getRequesterId());
     approval.setSourceDomainId(request.getSourceDomainId());
+    approval.setApproverQueuesCount(Long.valueOf(request.getApprovers().size()));
     approval.setUpdatedBy(request.getRequesterId());
-    approval.setExpireAt(DateUtils.addHours(now, request.getApprovers().get(0).getExpiry()));
-    approval.setCreatedAt(now);
+    approval.setExpireAt(DateUtils.addHours(new Date(), getTotalExpiryHours(request)));
     return approval;
   }
 
+  private int getTotalExpiryHours(ApprovalRequest request) {
+
+    int totalExpiryHours = 0;
+    for (ApproverRequest approverRequest : request.getApprovers()) {
+      totalExpiryHours += approverRequest.getExpiry();
+    }
+    return totalExpiryHours;
+  }
 }
