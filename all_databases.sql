@@ -7,7 +7,7 @@
 #
 # Host: 127.0.0.1 (MySQL 5.5.5-10.1.23-MariaDB)
 # Database: approval_service
-# Generation Time: 2017-06-27 05:29:52 +0000
+# Generation Time: 2017-07-07 05:23:43 +0000
 # ************************************************************
 
 
@@ -83,6 +83,7 @@ CREATE TABLE `approvals` (
   `requester_id` varchar(255) DEFAULT NULL,
   `source_domain_id` int(11) DEFAULT NULL,
   `conversation_id` varchar(255) DEFAULT NULL,
+  `approver_queues_count` int(11) DEFAULT NULL,
   `updated_by` varchar(255) DEFAULT NULL,
   `expire_at` datetime DEFAULT NULL,
   `created_at` datetime NOT NULL,
@@ -104,9 +105,30 @@ CREATE TABLE `approver_queue` (
   `approval_id` varchar(255) NOT NULL DEFAULT '',
   `approver_status` varchar(255) NOT NULL DEFAULT '',
   `type` varchar(255) DEFAULT NULL,
+  `queue_id` int(11) DEFAULT NULL,
   `start_time` datetime DEFAULT NULL,
   `end_time` datetime DEFAULT NULL,
   `created_at` datetime NOT NULL,
+  `updated_at` datetime NOT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+
+
+# Dump of table tasks
+# ------------------------------------------------------------
+
+DROP TABLE IF EXISTS `tasks`;
+
+CREATE TABLE `tasks` (
+  `id` int(11) unsigned NOT NULL AUTO_INCREMENT,
+  `approval_id` varchar(255) NOT NULL DEFAULT '',
+  `queue_id` int(11) NOT NULL,
+  `type` varchar(255) NOT NULL DEFAULT '',
+  `run_time` datetime NOT NULL,
+  `status` varchar(255) NOT NULL DEFAULT '',
+  `created_at` datetime NOT NULL,
+  `updated_at` datetime NOT NULL,
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
