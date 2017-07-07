@@ -64,10 +64,13 @@ public class ScheduledTask {
             .findByApprovalIdAndQueueId(task.getApprovalId(), task.getQueueId());
 
         for (ApproverQueue approver : currentApprovers) {
+
           approver.setApproverStatus(EXPIRED_STATUS);
           approverQueueRepository.save(approver);
+
           utility.publishApproverStatusUpdateEvent(new ApproverStatusUpdateEvent(
-              task.getApprovalId(), approver.getUserId(), EXPIRED_STATUS));
+              task.getApprovalId(), approval.getType(), approval.getTypeId(),
+              approver.getUserId(), EXPIRED_STATUS));
         }
 
         if (task.getQueueId() >= approval.getApproverQueuesCount()) {
@@ -75,9 +78,9 @@ public class ScheduledTask {
           approval.setStatus(EXPIRED_STATUS);
           Approval approvalFromDB = approvalRepository.save(approval);
 
-          utility.publishApprovalStatusUpdateEvent(new ApprovalStatusUpdateEvent(approval.getId(),
-              approval.getType(), approval.getTypeId(), EXPIRED_STATUS, STATUS_UPDATED_BY,
-              approvalFromDB.getUpdatedAt()));
+          utility.publishApprovalStatusUpdateEvent(new ApprovalStatusUpdateEvent(
+              task.getApprovalId(), approval.getType(), approval.getTypeId(),
+              EXPIRED_STATUS, STATUS_UPDATED_BY, approvalFromDB.getUpdatedAt()));
 
         } else {
 
@@ -85,10 +88,13 @@ public class ScheduledTask {
               .findByApprovalIdAndQueueId(task.getApprovalId(), task.getQueueId() + 1);
 
           for (ApproverQueue approver : nextApprovers) {
+
             approver.setApproverStatus(ACTIVE_STATUS);
             approverQueueRepository.save(approver);
+
             utility.publishApproverStatusUpdateEvent(new ApproverStatusUpdateEvent(
-                task.getApprovalId(), approver.getUserId(), EXPIRED_STATUS));
+                task.getApprovalId(), approval.getType(), approval.getTypeId(),
+                approver.getUserId(), ACTIVE_STATUS));
           }
 
         }
