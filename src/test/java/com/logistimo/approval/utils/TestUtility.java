@@ -28,6 +28,11 @@ public class TestUtility {
     return Collections.singletonList(new ApprovalDomainMapping(APPROVAL_ID, 16L));
   }
 
+  public static List<ApproverQueue> getApprovers() {
+    return Collections.singletonList(new ApproverQueue(APPROVAL_ID, "U001", "AC",
+        "PRIMARY", 1L, null, null));
+  }
+
   public static Approval getApproval() {
     Approval approval = new Approval();
     approval.setId(APPROVAL_ID);

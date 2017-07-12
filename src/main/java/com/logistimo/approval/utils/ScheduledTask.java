@@ -15,14 +15,18 @@ import com.logistimo.approval.models.ApproverStatusUpdateEvent;
 import com.logistimo.approval.repository.IApprovalRepository;
 import com.logistimo.approval.repository.IApproverQueueRepository;
 import com.logistimo.approval.repository.ITaskRepository;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.Optional;
+import java.util.concurrent.TimeUnit;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
+import org.springframework.util.CollectionUtils;
 
 /**
  * Created by nitisha.khandelwal on 28/06/17.
@@ -46,7 +50,7 @@ public class ScheduledTask {
   @Autowired
   private IApproverQueueRepository approverQueueRepository;
 
-  @Scheduled(fixedRate = 500)
+  @Scheduled(fixedRate = 1000)
   public void run() {
 
     Date now = new Date();
@@ -63,6 +67,17 @@ public class ScheduledTask {
         List<ApproverQueue> currentApprovers = approverQueueRepository
             .findByApprovalIdAndQueueId(task.getApprovalId(), task.getQueueId());
 
+        List<ApproverQueue> nextApprovers = null;
+        List<String> nextApproverIds = new ArrayList<>();
+
+        if (task.getQueueId() < approval.getApproverQueuesCount()) {
+          nextApprovers = approverQueueRepository
+              .findByApprovalIdAndQueueId(task.getApprovalId(), task.getQueueId() + 1);
+          for (ApproverQueue approver : nextApprovers) {
+            nextApproverIds.add(approver.getUserId());
+          }
+        }
+
         for (ApproverQueue approver : currentApprovers) {
 
           approver.setApproverStatus(EXPIRED_STATUS);
@@ -70,22 +85,28 @@ public class ScheduledTask {
 
           utility.publishApproverStatusUpdateEvent(new ApproverStatusUpdateEvent(
               task.getApprovalId(), approval.getType(), approval.getTypeId(),
-              approver.getUserId(), EXPIRED_STATUS));
+              approval.getRequesterId(), approval.getCreatedAt(), approver.getEndTime(),
+              (int) TimeUnit.MILLISECONDS.toHours(
+                  approver.getEndTime().getTime() - approver.getStartTime().getTime()),
+              nextApproverIds, approver.getUserId(), EXPIRED_STATUS));
         }
 
-        if (task.getQueueId() >= approval.getApproverQueuesCount()) {
+        if (CollectionUtils.isEmpty(nextApprovers)) {
 
           approval.setStatus(EXPIRED_STATUS);
           Approval approvalFromDB = approvalRepository.save(approval);
 
+          List<String> approverIds = new ArrayList<>();
+
+          Optional.ofNullable(approverQueueRepository.findByApprovalId(task.getApprovalId()))
+              .ifPresent(l -> l.forEach(item -> approverIds.add(item.getUserId())));
+
           utility.publishApprovalStatusUpdateEvent(new ApprovalStatusUpdateEvent(
               task.getApprovalId(), approval.getType(), approval.getTypeId(),
-              EXPIRED_STATUS, STATUS_UPDATED_BY, approvalFromDB.getUpdatedAt()));
+              approval.getRequesterId(), approverIds, EXPIRED_STATUS, STATUS_UPDATED_BY,
+              approvalFromDB.getUpdatedAt()));
 
         } else {
-
-          List<ApproverQueue> nextApprovers = approverQueueRepository
-              .findByApprovalIdAndQueueId(task.getApprovalId(), task.getQueueId() + 1);
 
           for (ApproverQueue approver : nextApprovers) {
 
@@ -94,10 +115,13 @@ public class ScheduledTask {
 
             utility.publishApproverStatusUpdateEvent(new ApproverStatusUpdateEvent(
                 task.getApprovalId(), approval.getType(), approval.getTypeId(),
-                approver.getUserId(), ACTIVE_STATUS));
+                approval.getRequesterId(), approval.getCreatedAt(), null,
+                (int) TimeUnit.MILLISECONDS.toHours(
+                    approver.getEndTime().getTime() - approver.getStartTime().getTime()),
+                nextApproverIds, approver.getUserId(), ACTIVE_STATUS));
           }
-
         }
+
         updateTaskStatus(task, TASK_DONE);
       }
     }

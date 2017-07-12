@@ -19,6 +19,7 @@ import com.logistimo.approval.models.ApprovalStatusUpdateEvent;
 import com.logistimo.approval.models.StatusUpdateRequest;
 import com.logistimo.approval.repository.IApprovalRepository;
 import com.logistimo.approval.repository.IApprovalStatusHistoryRepository;
+import com.logistimo.approval.repository.IApproverQueueRepository;
 import com.logistimo.approval.utils.Constants;
 import com.logistimo.approval.utils.Utility;
 import java.io.IOException;
@@ -45,6 +46,9 @@ public class UpdateApprovalStatusActionTest {
   private IApprovalRepository approvalRepository;
 
   @Mock
+  private IApproverQueueRepository approverQueueRepository;
+
+  @Mock
   private IApprovalStatusHistoryRepository statusHistoryRepository;
 
   @Mock
@@ -60,6 +64,7 @@ public class UpdateApprovalStatusActionTest {
         .thenReturn(getLastStatus());
     when(statusHistoryRepository.save(any(ApprovalStatusHistory.class)))
         .thenReturn(getCurrentStatus());
+    when(approverQueueRepository.findByApprovalId(anyString())).thenReturn(getApprovers());
   }
 
   @Test
@@ -75,7 +80,8 @@ public class UpdateApprovalStatusActionTest {
     verify(approvalRepository, times(1)).save(any(Approval.class));
     verify(statusHistoryRepository, times(2)).save(any(ApprovalStatusHistory.class));
     verify(utility, times(1)).publishApprovalStatusUpdateEvent(eventCaptor.capture());
-    verify(utility, times(1)).addMessageToConversation(anyString(), anyString(), anyString(), any());
+    verify(utility, times(1))
+        .addMessageToConversation(anyString(), anyString(), anyString(), any());
 
     assertEquals(eventCaptor.getValue().getStatus(), request.getStatus());
     assertEquals(eventCaptor.getValue().getUpdatedBy(), request.getUpdatedBy());
