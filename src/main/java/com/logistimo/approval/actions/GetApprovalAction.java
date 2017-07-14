@@ -18,6 +18,7 @@ import java.util.Set;
 
 import static com.logistimo.approval.utils.Constants.ACTIVE_STATUS;
 import static com.logistimo.approval.utils.Constants.APPROVAL_NOT_FOUND;
+import static com.logistimo.approval.utils.Constants.PENDING_STATUS;
 
 /**
  * Created by nitisha.khandelwal on 11/05/17.
@@ -42,14 +43,15 @@ public class GetApprovalAction {
 
     ApprovalResponse response = getResponseFromApprovalDB(approval);
 
-    Set<ApproverQueue> queues = approval.getApprovers();
-
-    if (!CollectionUtils.isEmpty(queues)) {
-      for (ApproverQueue queue : queues) {
-        if (ACTIVE_STATUS.equalsIgnoreCase(queue.getApproverStatus())) {
-          response.setActiveApproverType(queue.getType());
+    if (PENDING_STATUS.equalsIgnoreCase(approval.getStatus())) {
+      Set<ApproverQueue> queues = approval.getApprovers();
+      if (!CollectionUtils.isEmpty(queues)) {
+        for (ApproverQueue queue : queues) {
+          if (ACTIVE_STATUS.equalsIgnoreCase(queue.getApproverStatus())) {
+            response.setActiveApproverType(queue.getType());
+            response.getApprovers().add(mapper.map(queue, ApproverResponse.class));
+          }
         }
-        response.getApprovers().add(mapper.map(queue, ApproverResponse.class));
       }
     }
 
