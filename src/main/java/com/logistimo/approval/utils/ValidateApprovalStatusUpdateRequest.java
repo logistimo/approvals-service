@@ -1,14 +1,28 @@
 package com.logistimo.approval.utils;
 
-import static com.logistimo.approval.utils.Constants.*;
-
 import com.logistimo.approval.entity.Approval;
 import com.logistimo.approval.entity.ApproverQueue;
 import com.logistimo.approval.exception.BaseException;
 import com.logistimo.approval.models.StatusUpdateRequest;
-import java.util.Set;
+
 import org.apache.catalina.connector.Response;
 import org.apache.commons.lang.StringUtils;
+
+import java.util.Set;
+
+import static com.logistimo.approval.utils.Constants.ACTIVE_STATUS;
+import static com.logistimo.approval.utils.Constants.APPROVAL_NOT_FOUND;
+import static com.logistimo.approval.utils.Constants.APPROVAL_NOT_PENDING;
+import static com.logistimo.approval.utils.Constants.APPROVED_STATUS;
+import static com.logistimo.approval.utils.Constants.CANCELLED_STATUS;
+import static com.logistimo.approval.utils.Constants.EXPIRED_STATUS;
+import static com.logistimo.approval.utils.Constants.MESSAGE_ID_REQUIRED;
+import static com.logistimo.approval.utils.Constants.PENDING_STATUS;
+import static com.logistimo.approval.utils.Constants.REJECTED_STATUS;
+import static com.logistimo.approval.utils.Constants.REQUESTER_ID_CANNOT_BE_AN_APPROVER;
+import static com.logistimo.approval.utils.Constants.REQUESTER_ID_NOT_ACTIVE;
+import static com.logistimo.approval.utils.Constants.REQUESTER_NOT_PRESENT;
+import static com.logistimo.approval.utils.Constants.UPDATED_BY_REQUSTER_ID;
 
 /**
  * Created by nitisha.khandelwal on 26/06/17.
@@ -20,7 +34,7 @@ public class ValidateApprovalStatusUpdateRequest {
       StatusUpdateRequest request) {
 
     if (approval == null) {
-      throw new BaseException(Response.SC_NOT_FOUND, String.format(APPROVAL_NOT_FOUND, approvalId));
+      throw new BaseException(Response.SC_NOT_FOUND, APPROVAL_NOT_FOUND, approvalId);
     }
 
     if ((APPROVED_STATUS.equalsIgnoreCase(request.getStatus()) ||

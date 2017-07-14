@@ -1,11 +1,14 @@
 package com.logistimo.approval.exception;
 
-import java.io.IOException;
-import javax.servlet.http.HttpServletResponse;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
+
+import java.io.IOException;
+import java.util.Locale;
 
 /**
  * Created by nitisha.khandelwal on 12/05/17.
@@ -16,9 +19,12 @@ public class BaseExceptionMapper extends ResponseEntityExceptionHandler {
 
   @ResponseBody
   @ExceptionHandler(BaseException.class)
-  public void handleException(HttpServletResponse response, BaseException exception)
+  public ResponseEntity<ErrorResource> handleException(BaseException exception, Locale locale)
       throws IOException {
-    response.sendError(exception.getStatusCode(), exception.getMessage());
+
+    return new ResponseEntity<>(new ErrorResource(exception, locale),
+        HttpStatus.valueOf(exception.getStatusCode()));
+
   }
 
 }

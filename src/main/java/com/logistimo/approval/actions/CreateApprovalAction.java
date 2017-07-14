@@ -1,7 +1,5 @@
 package com.logistimo.approval.actions;
 
-import static com.logistimo.approval.utils.Constants.*;
-
 import com.logistimo.approval.conversationclient.request.PostMessageResponse;
 import com.logistimo.approval.entity.Approval;
 import com.logistimo.approval.entity.ApprovalAttributes;
@@ -22,11 +20,7 @@ import com.logistimo.approval.repository.IApproverQueueRepository;
 import com.logistimo.approval.repository.ITaskRepository;
 import com.logistimo.approval.utils.Constants;
 import com.logistimo.approval.utils.Utility;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
-import java.util.Optional;
-import java.util.UUID;
+
 import org.apache.catalina.connector.Response;
 import org.apache.commons.lang.time.DateUtils;
 import org.modelmapper.ModelMapper;
@@ -35,6 +29,17 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.util.CollectionUtils;
+
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
+import java.util.Optional;
+import java.util.UUID;
+
+import static com.logistimo.approval.utils.Constants.APPROVAL_ALREADY_EXITS;
+import static com.logistimo.approval.utils.Constants.EXPIRY_TASK;
+import static com.logistimo.approval.utils.Constants.PENDING_OR_APPROVED_STATUS;
+import static com.logistimo.approval.utils.Constants.TASK_QUEUED;
 
 /**
  * Created by nitisha.khandelwal on 10/05/17.
@@ -74,8 +79,8 @@ public class CreateApprovalAction {
         .findApprovedOrPendingApprovalsByTypeAndTypeId(request.getType(), request.getTypeId());
 
     if (!CollectionUtils.isEmpty(approvals)) {
-      throw new BaseException(Response.SC_CONFLICT, String.format(APPROVAL_ALREADY_EXITS,
-          request.getType(), request.getTypeId(), PENDING_OR_APPROVED_STATUS));
+      throw new BaseException(Response.SC_CONFLICT, APPROVAL_ALREADY_EXITS,
+          request.getType(), request.getTypeId(), PENDING_OR_APPROVED_STATUS);
     }
 
     String approvalId = UUID.randomUUID().toString().replace("-", "");
@@ -90,8 +95,9 @@ public class CreateApprovalAction {
     createApproversQueue(approvalFromDB, request);
     createApprovalAttributes(approvalId, request);
     createApprovalDomainMapping(approvalId, request);
-
-    return generateResponse(request, approvalFromDB);
+    ApprovalResponse response = generateResponse(request, approvalFromDB);
+    utility.publishApprovalRequestedEvent(response);
+    return response;
   }
 
   private void createApprovalDomainMapping(String approvalId, ApprovalRequest request) {

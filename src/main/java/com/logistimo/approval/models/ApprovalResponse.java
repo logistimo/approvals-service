@@ -42,4 +42,6 @@ public class ApprovalResponse {
 
   private Date updatedAt;
 
+  private String updatedBy;
+
 }

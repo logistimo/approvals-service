@@ -1,20 +1,23 @@
 package com.logistimo.approval.actions;
 
-import static com.logistimo.approval.utils.Constants.*;
-
 import com.logistimo.approval.entity.Approval;
 import com.logistimo.approval.entity.ApproverQueue;
 import com.logistimo.approval.exception.BaseException;
 import com.logistimo.approval.models.ApprovalResponse;
 import com.logistimo.approval.models.ApproverResponse;
 import com.logistimo.approval.repository.IApprovalRepository;
-import java.util.Optional;
-import java.util.Set;
+
 import org.apache.catalina.connector.Response;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.util.CollectionUtils;
+
+import java.util.Optional;
+import java.util.Set;
+
+import static com.logistimo.approval.utils.Constants.ACTIVE_STATUS;
+import static com.logistimo.approval.utils.Constants.APPROVAL_NOT_FOUND;
 
 /**
  * Created by nitisha.khandelwal on 11/05/17.
@@ -31,7 +34,7 @@ public class GetApprovalAction {
     Approval approval = approvalRepository.findOne(approvalId);
 
     if (approval == null) {
-      throw new BaseException(Response.SC_NOT_FOUND, String.format(APPROVAL_NOT_FOUND, approvalId));
+      throw new BaseException(Response.SC_NOT_FOUND, APPROVAL_NOT_FOUND, approvalId);
     }
 
     ModelMapper mapper = new ModelMapper();
@@ -71,6 +74,7 @@ public class GetApprovalAction {
     response.setExpireAt(approval.getExpireAt());
     response.setCreatedAt(approval.getCreatedAt());
     response.setUpdatedAt(approval.getUpdatedAt());
+    response.setUpdatedBy(approval.getUpdatedBy());
     return response;
   }
 }
