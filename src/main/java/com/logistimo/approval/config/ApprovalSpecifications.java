@@ -2,6 +2,7 @@ package com.logistimo.approval.config;
 
 import com.logistimo.approval.entity.Approval;
 import com.logistimo.approval.entity.ApprovalAttributes;
+import com.logistimo.approval.entity.ApprovalDomainMapping;
 import com.logistimo.approval.entity.ApproverQueue;
 import java.util.Date;
 import javax.persistence.criteria.Join;
@@ -15,7 +16,7 @@ import org.springframework.data.jpa.domain.Specification;
 
 public class ApprovalSpecifications {
 
-  public static Specification<Approval> withDomainId(Long domainId) {
+  public static Specification<Approval> withSoureDomainId(Long domainId) {
     if (domainId == null) {
       return null;
     }
@@ -104,6 +105,17 @@ public class ApprovalSpecifications {
     return (root, criteriaQuery, criteriaBuilder) -> {
       Join<Approval, ApprovalAttributes> attributes = root.join("attributes");
       return criteriaBuilder.equal(attributes.get("value"), value);
+    };
+  }
+
+  public static Specification<Approval> withDomainId(Long domainId) {
+    if (domainId == null) {
+      return null;
+    }
+
+    return (root, criteriaQuery, criteriaBuilder) -> {
+      Join<Approval, ApprovalDomainMapping> domains = root.join("domains");
+      return criteriaBuilder.equal(domains.get("domainId"), domainId);
     };
   }
 }
