@@ -75,13 +75,13 @@ public class CreateApprovalAction {
 
     log.info("Inside the CreateApprovalAction with request - {}", request);
 
-    List<Approval> approvals = approvalRepository
-        .findApprovedOrPendingApprovalsByTypeAndTypeId(request.getType(), request.getTypeId());
-
-    if (!CollectionUtils.isEmpty(approvals)) {
-      throw new BaseException(Response.SC_CONFLICT, APPROVAL_ALREADY_EXITS,
-          request.getType(), request.getTypeId(), PENDING_OR_APPROVED_STATUS);
-    }
+//    List<Approval> approvals = approvalRepository
+//        .findApprovedOrPendingApprovalsByTypeAndTypeId(request.getType(), request.getTypeId());
+//
+//    if (!CollectionUtils.isEmpty(approvals)) {
+//      throw new BaseException(Response.SC_CONFLICT, APPROVAL_ALREADY_EXITS,
+//          request.getType(), request.getTypeId(), PENDING_OR_APPROVED_STATUS);
+//    }
 
     String approvalId = UUID.randomUUID().toString().replace("-", "");
 
