@@ -75,14 +75,6 @@ public class CreateApprovalAction {
 
     log.info("Inside the CreateApprovalAction with request - {}", request);
 
-//    List<Approval> approvals = approvalRepository
-//        .findApprovedOrPendingApprovalsByTypeAndTypeId(request.getType(), request.getTypeId());
-//
-//    if (!CollectionUtils.isEmpty(approvals)) {
-//      throw new BaseException(Response.SC_CONFLICT, APPROVAL_ALREADY_EXITS,
-//          request.getType(), request.getTypeId(), PENDING_OR_APPROVED_STATUS);
-//    }
-
     String approvalId = UUID.randomUUID().toString().replace("-", "");
 
     PostMessageResponse postMessageResponse = utility.addMessageToConversation(approvalId,
@@ -118,6 +110,7 @@ public class CreateApprovalAction {
     response.setExpireAt(approval.getExpireAt());
     response.setCreatedAt(approval.getCreatedAt());
     response.setUpdatedAt(approval.getUpdatedAt());
+    response.setUpdatedBy(approval.getUpdatedBy());
     response.setActiveApproverType(request.getApprovers().get(0).getType());
     response.setApprovers(new ArrayList<>());
     Optional.ofNullable(approverQueueRepository.findByApprovalId(approval.getId())).ifPresent(
