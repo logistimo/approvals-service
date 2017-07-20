@@ -7,11 +7,11 @@ import com.logistimo.approval.entity.ApprovalDomainMapping;
 import com.logistimo.approval.entity.ApprovalStatusHistory;
 import com.logistimo.approval.entity.ApproverQueue;
 import com.logistimo.approval.entity.Task;
-import com.logistimo.approval.exception.BaseException;
 import com.logistimo.approval.models.ApprovalRequest;
 import com.logistimo.approval.models.ApprovalResponse;
 import com.logistimo.approval.models.ApproverRequest;
 import com.logistimo.approval.models.ApproverResponse;
+import com.logistimo.approval.models.ApproverStatusUpdateEvent;
 import com.logistimo.approval.repository.IApprovalAttributesRepository;
 import com.logistimo.approval.repository.IApprovalDomainMappingRepository;
 import com.logistimo.approval.repository.IApprovalRepository;
@@ -21,7 +21,6 @@ import com.logistimo.approval.repository.ITaskRepository;
 import com.logistimo.approval.utils.Constants;
 import com.logistimo.approval.utils.Utility;
 
-import org.apache.catalina.connector.Response;
 import org.apache.commons.lang.time.DateUtils;
 import org.modelmapper.ModelMapper;
 import org.slf4j.Logger;
@@ -32,13 +31,12 @@ import org.springframework.util.CollectionUtils;
 
 import java.util.ArrayList;
 import java.util.Date;
-import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
-import static com.logistimo.approval.utils.Constants.APPROVAL_ALREADY_EXITS;
+import static com.logistimo.approval.utils.Constants.ACTIVE_STATUS;
 import static com.logistimo.approval.utils.Constants.EXPIRY_TASK;
-import static com.logistimo.approval.utils.Constants.PENDING_OR_APPROVED_STATUS;
+import static com.logistimo.approval.utils.Constants.QUEUED_STATUS;
 import static com.logistimo.approval.utils.Constants.TASK_QUEUED;
 
 /**
@@ -137,18 +135,26 @@ public class CreateApprovalAction {
       for (ApproverRequest approver : request.getApprovers()) {
 
         Date expiryTime = DateUtils.addHours(startTime, approver.getExpiry());
-        String status = Constants.QUEUED_STATUS;
+        String status = QUEUED_STATUS;
 
         if (queueId == 1L) {
-          status = Constants.ACTIVE_STATUS;
+          status = ACTIVE_STATUS;
         }
 
         for (String userId : approver.getUserIds()) {
           approverQueueRepository.save(new ApproverQueue(approval.getId(), userId, status,
               approver.getType(), queueId, startTime, expiryTime));
+
+          if (ACTIVE_STATUS.equalsIgnoreCase(status)) {
+            utility.publishApproverStatusUpdateEvent(
+                new ApproverStatusUpdateEvent(approval.getId(), approval.getType(),
+                    approval.getTypeId(), approval.getRequesterId(), approval.getCreatedAt(),
+                    expiryTime, approver.getExpiry(), null, userId, ACTIVE_STATUS));
+          }
         }
 
-        taskRepository.save(new Task(approval.getId(), queueId, EXPIRY_TASK, expiryTime, TASK_QUEUED));
+        taskRepository
+            .save(new Task(approval.getId(), queueId, EXPIRY_TASK, expiryTime, TASK_QUEUED));
 
         startTime = DateUtils.addHours(startTime, approver.getExpiry());
         queueId += 1;
