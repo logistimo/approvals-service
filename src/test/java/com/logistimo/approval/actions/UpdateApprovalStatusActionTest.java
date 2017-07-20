@@ -24,6 +24,7 @@ import com.logistimo.approval.utils.Constants;
 import com.logistimo.approval.utils.Utility;
 import java.io.IOException;
 import java.util.Collections;
+import java.util.ResourceBundle;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -99,7 +100,7 @@ public class UpdateApprovalStatusActionTest {
       action.invoke(APPROVAL_ID, getStatusUpdateRequest());
     } catch (BaseException e) {
       verify(approvalRepository, times(1)).findOne(APPROVAL_ID);
-      assertEquals(e.getMessage(), Constants.APPROVAL_NOT_PENDING);
+      assertEquals(e.getMessage(), ResourceBundle.getBundle("errors").getString(Constants.APPROVAL_NOT_PENDING));
       throw e;
     }
   }
@@ -114,7 +115,7 @@ public class UpdateApprovalStatusActionTest {
       action.invoke(APPROVAL_ID, request);
     } catch (BaseException e) {
       verify(approvalRepository, times(1)).findOne(APPROVAL_ID);
-      assertEquals(e.getMessage(), Constants.MESSAGE_ID_REQUIRED);
+      assertEquals(e.getMessage(), ResourceBundle.getBundle("errors").getString(Constants.MESSAGE_ID_REQUIRED));
       throw e;
     }
   }
@@ -128,7 +129,7 @@ public class UpdateApprovalStatusActionTest {
       action.invoke(APPROVAL_ID, request);
     } catch (BaseException e) {
       verify(approvalRepository, times(1)).findOne(APPROVAL_ID);
-      assertEquals(e.getMessage(), Constants.UPDATED_BY_REQUSTER_ID);
+      assertEquals(e.getMessage(), ResourceBundle.getBundle("errors").getString(Constants.UPDATED_BY_REQUSTER_ID));
       throw e;
     }
   }
@@ -143,7 +144,7 @@ public class UpdateApprovalStatusActionTest {
       action.invoke(APPROVAL_ID, getStatusUpdateRequest());
     } catch (BaseException e) {
       verify(approvalRepository, times(1)).findOne(APPROVAL_ID);
-      assertEquals(e.getMessage(), Constants.REQUESTER_ID_NOT_ACTIVE);
+      assertEquals(e.getMessage(), ResourceBundle.getBundle("errors").getString(Constants.REQUESTER_ID_NOT_ACTIVE));
       throw e;
     }
   }
@@ -157,7 +158,7 @@ public class UpdateApprovalStatusActionTest {
       action.invoke(APPROVAL_ID, request);
     } catch (BaseException e) {
       verify(approvalRepository, times(1)).findOne(APPROVAL_ID);
-      assertEquals(e.getMessage(), Constants.REQUESTER_NOT_PRESENT);
+      assertEquals(e.getMessage(), ResourceBundle.getBundle("errors").getString(Constants.REQUESTER_NOT_PRESENT));
       throw e;
     }
   }
@@ -171,7 +172,7 @@ public class UpdateApprovalStatusActionTest {
       action.invoke(APPROVAL_ID, request);
     } catch (BaseException e) {
       verify(approvalRepository, times(1)).findOne(APPROVAL_ID);
-      assertEquals(e.getMessage(), Constants.REQUESTER_ID_CANNOT_BE_AN_APPROVER);
+      assertEquals(e.getMessage(), ResourceBundle.getBundle("errors").getString(Constants.REQUESTER_ID_CANNOT_BE_AN_APPROVER));
       throw e;
     }
   }

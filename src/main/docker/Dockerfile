@@ -1,6 +1,12 @@
+#  Copyright © 2017 Logistimo - All Rights Reserved
+#
+#  Unauthorized copying of this file, via any medium is strictly prohibited.
+#
+#  Proprietary and confidential.
+
 FROM openjdk:8-jre
 
-MAINTAINER Nitisha Khandelwal <nitisha@logistimo.com>
+MAINTAINER Logistimo Dockers <dockers@logistimo.com>
 
 VOLUME /tmp
 
