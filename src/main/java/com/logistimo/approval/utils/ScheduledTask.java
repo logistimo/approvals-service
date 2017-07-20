@@ -53,10 +53,14 @@ public class ScheduledTask {
   @Scheduled(fixedRate = 1000)
   public void run() {
 
+    log.info("Inside ScheduledTask");
+
     Date now = new Date();
     List<Task> tasks = taskRepository.findPendingTasks(now);
 
     for (Task task : tasks) {
+
+      log.info("Executing task - {}", task);
 
       updateTaskStatus(task, TASK_ACTIVE);
 
