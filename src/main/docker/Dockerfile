@@ -6,7 +6,7 @@
 
 FROM openjdk:8-jre
 
-MAINTAINER Logistimo Dockers <dockers@logistimo.com>
+MAINTAINER  dockers@logistimo.com
 
 VOLUME /tmp
 

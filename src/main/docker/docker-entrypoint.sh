@@ -1,7 +1,5 @@
 #!/bin/bash
 
-#!/bin/bash
-
 # Copyright © 2017 Logistimo.
 #
 # This file is part of Logistimo.
