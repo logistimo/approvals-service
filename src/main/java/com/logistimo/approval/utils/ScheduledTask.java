@@ -1,12 +1,5 @@
 package com.logistimo.approval.utils;
 
-import static com.logistimo.approval.utils.Constants.ACTIVE_STATUS;
-import static com.logistimo.approval.utils.Constants.EXPIRED_STATUS;
-import static com.logistimo.approval.utils.Constants.EXPIRY_TASK;
-import static com.logistimo.approval.utils.Constants.STATUS_UPDATED_BY;
-import static com.logistimo.approval.utils.Constants.TASK_ACTIVE;
-import static com.logistimo.approval.utils.Constants.TASK_DONE;
-
 import com.logistimo.approval.entity.Approval;
 import com.logistimo.approval.entity.ApproverQueue;
 import com.logistimo.approval.entity.Task;
@@ -15,18 +8,25 @@ import com.logistimo.approval.models.ApproverStatusUpdateEvent;
 import com.logistimo.approval.repository.IApprovalRepository;
 import com.logistimo.approval.repository.IApproverQueueRepository;
 import com.logistimo.approval.repository.ITaskRepository;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
-import java.util.Optional;
-import java.util.concurrent.TimeUnit;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 import org.springframework.util.CollectionUtils;
+
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
+import java.util.Optional;
+import java.util.concurrent.TimeUnit;
+
+import static com.logistimo.approval.utils.Constants.ACTIVE_STATUS;
+import static com.logistimo.approval.utils.Constants.EXPIRED_STATUS;
+import static com.logistimo.approval.utils.Constants.EXPIRY_TASK;
+import static com.logistimo.approval.utils.Constants.STATUS_UPDATED_BY;
+import static com.logistimo.approval.utils.Constants.TASK_ACTIVE;
+import static com.logistimo.approval.utils.Constants.TASK_DONE;
 
 /**
  * Created by nitisha.khandelwal on 28/06/17.
@@ -35,8 +35,6 @@ import org.springframework.util.CollectionUtils;
 @Component
 @ConditionalOnProperty(name = "task.machine", havingValue = "true")
 public class ScheduledTask {
-
-  private static final Logger log = LoggerFactory.getLogger(ScheduledTask.class);
 
   @Autowired
   private Utility utility;
@@ -50,7 +48,7 @@ public class ScheduledTask {
   @Autowired
   private IApproverQueueRepository approverQueueRepository;
 
-  @Scheduled(fixedRate = 1000)
+  @Scheduled(fixedRate = 30_000)
   public void run() {
 
     log.info("Inside ScheduledTask");
