@@ -9,6 +9,8 @@ import com.logistimo.approval.repository.IApprovalRepository;
 import com.logistimo.approval.repository.IApproverQueueRepository;
 import com.logistimo.approval.repository.ITaskRepository;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.scheduling.annotation.Scheduled;
@@ -35,6 +37,8 @@ import static com.logistimo.approval.utils.Constants.TASK_DONE;
 @Component
 @ConditionalOnProperty(name = "task.machine", havingValue = "true")
 public class ScheduledTask {
+
+  private static final Logger log = LoggerFactory.getLogger(ScheduledTask.class);
 
   @Autowired
   private Utility utility;
