@@ -27,6 +27,7 @@ ENV JAVA_OPTS="" \
                 	ACTIVEMQ_BROKER_URL=tcp://localhost:61616 \
                 	ACTIVEMQ_USER=admin \
                 	ACTIVEMQ_PASSWORD=admin \
+                	TASK_MACHINE=true \
                 	JAVA_AGENT_PORT=6409
 
 RUN bash -c 'touch /app.jar'

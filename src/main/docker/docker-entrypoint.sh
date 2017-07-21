@@ -33,6 +33,7 @@ exec java $JAVA_OPTS -Djava.security.egd=file:/dev/./urandom \
     -Dspring.activemq.broker-url=$ACTIVEMQ_BROKER_URL \
     -Dspring.activemq.user=$ACTIVEMQ_USER \
     -Dspring.activemq.password=$ACTIVEMQ_PASSWORD \
+    -Dtask.machine=$TASK_MACHINE \
     -jar /approval-service.jar
 
 
