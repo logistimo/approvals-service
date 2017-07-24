@@ -29,7 +29,7 @@ public class GetFilteredApprovalsAction {
 
     return approvalCustomRepository.findAll(
         where(ApprovalSpecifications.withRequesterId(filters.getRequesterId()))
-            .and(ApprovalSpecifications.withDomainId((long) filters.getDomainId()))
+            .and(ApprovalSpecifications.withDomainId(filters.getDomainId()))
             .and(ApprovalSpecifications.withStatus(filters.getStatus()))
             .and(ApprovalSpecifications.withType(filters.getType()))
             .and(ApprovalSpecifications.withTypeId(filters.getTypeId()))
