@@ -9,6 +9,7 @@ import org.apache.commons.lang.time.DateUtils;
 import org.springframework.data.jpa.domain.Specification;
 
 import java.util.Date;
+import java.util.List;
 
 import javax.persistence.criteria.Join;
 import javax.persistence.criteria.Path;
@@ -89,15 +90,15 @@ public class ApprovalSpecifications {
 
   }
 
-  public static Specification<Approval> withAttributes(String key, String value) {
-    if (key == null || value == null) {
+  public static Specification<Approval> withAttributes(String key, List<String> values) {
+    if (key == null || values == null || values.isEmpty()) {
       return null;
     }
 
     return (root, criteriaQuery, criteriaBuilder) -> {
       Join<Approval, ApprovalAttributes> attributes = root.join("attributes");
       return criteriaBuilder.and(criteriaBuilder.equal(attributes.get("key"), key),
-          criteriaBuilder.equal(attributes.get("value"), value));
+          attributes.get("value").in(values));
     };
   }
 
