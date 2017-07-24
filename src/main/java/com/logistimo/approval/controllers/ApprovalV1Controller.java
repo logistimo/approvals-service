@@ -28,6 +28,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.util.Arrays;
 import java.util.List;
 
 import javax.validation.Valid;
@@ -106,18 +107,19 @@ public class ApprovalV1Controller {
       @RequestParam(value = "approver_id", required = false) String approverId,
       @RequestParam(value = "approver_status", required = false) String approverStatus,
       @RequestParam(value = "attribute_key", required = false) String attributeKey,
-      @RequestParam(value = "attribute_value", required = false) String attributeValue,
+                                     @RequestParam(value = "attribute_value", required = false) String[] attributeValues,
                                      @RequestParam(value = "domain_id") Long domainId,
       @RequestParam(value = "sort", required = false) String sortQuery) {
     ApprovalFilters filters = getApprovalFilters(offset, size, requesterId, status,
         expiringInMinutes, approverId, approverStatus, type, typeId, sortQuery, attributeKey,
-        attributeValue, domainId);
+        attributeValues, domainId);
     return getFilteredApprovalsAction.invoke(filters);
   }
 
   private ApprovalFilters getApprovalFilters(int offset, int size, String requesterId,
       String status, Integer expiringInMinutes, String approverId, String approverStatus,
-      String type, String typeId, String sortQuery, String attributeKey, String attributeValue,
+                                             String type, String typeId, String sortQuery,
+                                             String attributeKey, String[] attributeValues,
                                              Long domainId) {
     ApprovalFilters filters = new ApprovalFilters();
     filters.setOffset(offset);
@@ -131,7 +133,9 @@ public class ApprovalV1Controller {
     filters.setTypeId(typeId);
     filters.setSortQuery(sortQuery);
     filters.setAttributeKey(attributeKey);
-    filters.setAttributeValue(attributeValue);
+    if (attributeValues != null) {
+      filters.setAttributeValues(Arrays.asList(attributeValues));
+    }
     filters.setDomainId(domainId);
     filters.validate();
     return filters;
