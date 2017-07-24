@@ -50,9 +50,7 @@ public class ApprovalFilters {
 
   private String approverStatus;
 
-  private String attributeKey;
-
-  private List<String> attributeValues = new ArrayList<>(1);
+  private List<AttributeFilter> attributes = new ArrayList<>(1);
 
   private Long domainId;
 
@@ -71,9 +69,11 @@ public class ApprovalFilters {
       throw new BaseException(Response.SC_BAD_REQUEST, APPROVER_ID_NOT_PRESENT);
     }
 
-    if ((StringUtils.isNotEmpty(attributeKey) && attributeValues.isEmpty())
-        || !attributeValues.isEmpty() && StringUtils.isEmpty(attributeKey)) {
-      throw new BaseException(Response.SC_BAD_REQUEST, KEY_OR_VALUE_MISSING);
+    for (AttributeFilter attribute : attributes) {
+      if ((StringUtils.isNotEmpty(attribute.getKey()) && attribute.getValues().isEmpty())
+          || !attribute.getValues().isEmpty() && StringUtils.isEmpty(attribute.getKey())) {
+        throw new BaseException(Response.SC_BAD_REQUEST, KEY_OR_VALUE_MISSING);
+      }
     }
 
     if (expiringInMinutes != null) {
