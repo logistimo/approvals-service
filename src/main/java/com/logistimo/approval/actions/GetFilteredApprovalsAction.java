@@ -1,16 +1,17 @@
 package com.logistimo.approval.actions;
 
-import static org.springframework.data.jpa.domain.Specifications.where;
-
 import com.logistimo.approval.config.ApprovalSpecifications;
 import com.logistimo.approval.entity.Approval;
 import com.logistimo.approval.models.ApprovalFilters;
 import com.logistimo.approval.repository.IApprovalCustomRepository;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Component;
+
+import static org.springframework.data.jpa.domain.Specifications.where;
 
 /**
  * Created by nitisha.khandelwal on 18/05/17.
@@ -28,14 +29,15 @@ public class GetFilteredApprovalsAction {
 
     return approvalCustomRepository.findAll(
         where(ApprovalSpecifications.withRequesterId(filters.getRequesterId()))
-            .and(ApprovalSpecifications.withDomainId(Long.valueOf(filters.getDomainId())))
+            .and(ApprovalSpecifications.withDomainId((long) filters.getDomainId()))
             .and(ApprovalSpecifications.withStatus(filters.getStatus()))
             .and(ApprovalSpecifications.withType(filters.getType()))
             .and(ApprovalSpecifications.withTypeId(filters.getTypeId()))
             .and(ApprovalSpecifications.withApproverId(filters.getApproverId()))
             .and(ApprovalSpecifications.withExpiringInMinutes(filters.getExpiringInMinutes()))
             .and(ApprovalSpecifications.withApproverStatus(filters.getApproverStatus()))
-            .and(ApprovalSpecifications.withApprovalKey(filters.getAttributeKey()))
-            .and(ApprovalSpecifications.withApprovalValue(filters.getAttributeValue())), pageable);
+            .and(ApprovalSpecifications.withAttributes(filters.getAttributeKey(),
+                filters.getAttributeValue()))
+        , pageable);
   }
 }

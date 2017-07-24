@@ -11,16 +11,11 @@ import com.logistimo.approval.models.ApprovalFilters;
 import com.logistimo.approval.models.ApprovalRequest;
 import com.logistimo.approval.models.ApprovalResponse;
 import com.logistimo.approval.models.DomainUpdateRequest;
-import com.logistimo.approval.models.StatusUpdateRequest;
 import com.logistimo.approval.models.StatusResponse;
-import java.util.List;
-import javax.validation.Valid;
-import lombok.AccessLevel;
-import lombok.RequiredArgsConstructor;
-import lombok.experimental.FieldDefaults;
+import com.logistimo.approval.models.StatusUpdateRequest;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
-import org.springframework.boot.autoconfigure.condition.ConditionMessage.Builder;
 import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.transaction.annotation.Transactional;
@@ -32,6 +27,14 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
+
+import java.util.List;
+
+import javax.validation.Valid;
+
+import lombok.AccessLevel;
+import lombok.RequiredArgsConstructor;
+import lombok.experimental.FieldDefaults;
 
 /**
  * Created by nitisha.khandelwal on 08/05/17.
@@ -104,7 +107,7 @@ public class ApprovalV1Controller {
       @RequestParam(value = "approver_status", required = false) String approverStatus,
       @RequestParam(value = "attribute_key", required = false) String attributeKey,
       @RequestParam(value = "attribute_value", required = false) String attributeValue,
-      @RequestParam(value = "domain_id") int domainId,
+                                     @RequestParam(value = "domain_id") Long domainId,
       @RequestParam(value = "sort", required = false) String sortQuery) {
     ApprovalFilters filters = getApprovalFilters(offset, size, requesterId, status,
         expiringInMinutes, approverId, approverStatus, type, typeId, sortQuery, attributeKey,
@@ -115,7 +118,7 @@ public class ApprovalV1Controller {
   private ApprovalFilters getApprovalFilters(int offset, int size, String requesterId,
       String status, Integer expiringInMinutes, String approverId, String approverStatus,
       String type, String typeId, String sortQuery, String attributeKey, String attributeValue,
-      int domainId) {
+                                             Long domainId) {
     ApprovalFilters filters = new ApprovalFilters();
     filters.setOffset(offset);
     filters.setSize(size);
