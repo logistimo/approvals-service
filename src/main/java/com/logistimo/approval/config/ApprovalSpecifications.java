@@ -4,11 +4,14 @@ import com.logistimo.approval.entity.Approval;
 import com.logistimo.approval.entity.ApprovalAttributes;
 import com.logistimo.approval.entity.ApprovalDomainMapping;
 import com.logistimo.approval.entity.ApproverQueue;
-import java.util.Date;
-import javax.persistence.criteria.Join;
-import javax.persistence.criteria.Path;
+
 import org.apache.commons.lang.time.DateUtils;
 import org.springframework.data.jpa.domain.Specification;
+
+import java.util.Date;
+
+import javax.persistence.criteria.Join;
+import javax.persistence.criteria.Path;
 
 /**
  * Created by nitisha.khandelwal on 18/05/17.
@@ -86,25 +89,15 @@ public class ApprovalSpecifications {
 
   }
 
-  public static Specification<Approval> withApprovalKey(String key) {
-    if (key == null) {
+  public static Specification<Approval> withAttributes(String key, String value) {
+    if (key == null || value == null) {
       return null;
     }
 
     return (root, criteriaQuery, criteriaBuilder) -> {
       Join<Approval, ApprovalAttributes> attributes = root.join("attributes");
-      return criteriaBuilder.equal(attributes.get("key"), key);
-    };
-  }
-
-  public static Specification<Approval> withApprovalValue(String value) {
-    if (value == null) {
-      return null;
-    }
-
-    return (root, criteriaQuery, criteriaBuilder) -> {
-      Join<Approval, ApprovalAttributes> attributes = root.join("attributes");
-      return criteriaBuilder.equal(attributes.get("value"), value);
+      return criteriaBuilder.and(criteriaBuilder.equal(attributes.get("key"), key),
+          criteriaBuilder.equal(attributes.get("value"), value));
     };
   }
 

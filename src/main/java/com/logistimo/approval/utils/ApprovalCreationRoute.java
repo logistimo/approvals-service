@@ -15,6 +15,7 @@ public class ApprovalCreationRoute extends RouteBuilder {
     from("seda:approval-requested")
         .marshal()
         .json(JsonLibrary.Gson)
+        .delay(5000)
         .to("activemq:approval-requested");
   }
 }
