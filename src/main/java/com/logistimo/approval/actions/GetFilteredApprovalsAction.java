@@ -36,8 +36,7 @@ public class GetFilteredApprovalsAction {
             .and(ApprovalSpecifications.withApproverId(filters.getApproverId()))
             .and(ApprovalSpecifications.withExpiringInMinutes(filters.getExpiringInMinutes()))
             .and(ApprovalSpecifications.withApproverStatus(filters.getApproverStatus()))
-            .and(ApprovalSpecifications.withAttributes(filters.getAttributeKey(),
-                filters.getAttributeValues()))
+            .and(ApprovalSpecifications.withAttributes(filters.getAttributes()))
         , pageable);
   }
 }

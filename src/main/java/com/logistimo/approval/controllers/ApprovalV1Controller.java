@@ -10,6 +10,7 @@ import com.logistimo.approval.entity.Approval;
 import com.logistimo.approval.models.ApprovalFilters;
 import com.logistimo.approval.models.ApprovalRequest;
 import com.logistimo.approval.models.ApprovalResponse;
+import com.logistimo.approval.models.AttributeFilter;
 import com.logistimo.approval.models.DomainUpdateRequest;
 import com.logistimo.approval.models.StatusResponse;
 import com.logistimo.approval.models.StatusUpdateRequest;
@@ -29,6 +30,7 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 
 import javax.validation.Valid;
@@ -132,9 +134,11 @@ public class ApprovalV1Controller {
     filters.setType(type);
     filters.setTypeId(typeId);
     filters.setSortQuery(sortQuery);
-    filters.setAttributeKey(attributeKey);
-    if (attributeValues != null) {
-      filters.setAttributeValues(Arrays.asList(attributeValues));
+    if (attributeKey != null && attributeValues != null && attributeValues.length > 0) {
+      AttributeFilter attributeFilter = new AttributeFilter();
+      attributeFilter.setKey(attributeKey);
+      attributeFilter.setValues(Arrays.asList(attributeValues));
+      filters.setAttributes(Collections.singletonList(attributeFilter));
     }
     filters.setDomainId(domainId);
     filters.validate();
