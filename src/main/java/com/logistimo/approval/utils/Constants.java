@@ -37,6 +37,8 @@ public class Constants {
   public static final String TASK_QUEUED = "qd";
   public static final String TASK_ACTIVE = "ac";
   public static final String TASK_DONE = "dn";
+  public static final String TASK_NOT_REQUIRED = "nr";
+
 
   public static final String QUEUED_STATUS = "qd";
   public static final String ACTIVE_STATUS = "ac";

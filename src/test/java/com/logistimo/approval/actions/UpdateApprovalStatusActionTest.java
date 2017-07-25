@@ -20,6 +20,7 @@ import com.logistimo.approval.models.StatusUpdateRequest;
 import com.logistimo.approval.repository.IApprovalRepository;
 import com.logistimo.approval.repository.IApprovalStatusHistoryRepository;
 import com.logistimo.approval.repository.IApproverQueueRepository;
+import com.logistimo.approval.repository.ITaskRepository;
 import com.logistimo.approval.utils.Constants;
 import com.logistimo.approval.utils.Utility;
 import java.io.IOException;
@@ -32,6 +33,7 @@ import org.mockito.ArgumentCaptor;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit4.SpringRunner;
 
@@ -53,6 +55,9 @@ public class UpdateApprovalStatusActionTest {
   private IApprovalStatusHistoryRepository statusHistoryRepository;
 
   @Mock
+  private ITaskRepository taskRepository;
+
+  @Mock
   private Utility utility;
 
   @InjectMocks
@@ -66,6 +71,7 @@ public class UpdateApprovalStatusActionTest {
     when(statusHistoryRepository.save(any(ApprovalStatusHistory.class)))
         .thenReturn(getCurrentStatus());
     when(approverQueueRepository.findByApprovalId(anyString())).thenReturn(getApprovers());
+    when(taskRepository.findPendingTasksByApprovalId(anyString())).thenReturn(null);
   }
 
   @Test
