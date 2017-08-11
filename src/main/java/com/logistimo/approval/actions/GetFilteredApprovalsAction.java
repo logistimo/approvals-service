@@ -5,6 +5,7 @@ import com.logistimo.approval.entity.Approval;
 import com.logistimo.approval.models.ApprovalFilters;
 import com.logistimo.approval.repository.IApprovalCustomRepository;
 
+import com.logistimo.approval.utils.OffsetBasedPageRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -25,8 +26,8 @@ public class GetFilteredApprovalsAction {
 
   public Page<Approval> invoke(ApprovalFilters filters) {
 
-    Pageable pageable = new PageRequest((filters.getOffset() / filters.getSize()),
-        filters.getSize(), filters.getSort());
+    Pageable pageable = new OffsetBasedPageRequest(filters.getOffset(), filters.getSize(),
+        filters.getSort());
 
     return approvalCustomRepository.findAll(
         where(ApprovalSpecifications.withRequesterId(filters.getRequesterId()))
