@@ -27,6 +27,7 @@ public class Constants {
 
   public static final String APPROVAL_NOT_FOUND = "AS006";
   public static final String APPROVAL_NOT_PENDING = "AS007";
+  public static final String INVALID_STATUS = "AS014";
   public static final String INVALID_STATUS_AND_EXPIRING_IN_COMBINATION = "AS001";
   public static final String KEY_OR_VALUE_MISSING = "AS003";
   public static final String APPROVER_ID_NOT_PRESENT = "AS002";
@@ -47,7 +48,4 @@ public class Constants {
   public static final String APPROVED_STATUS = "ap";
   public static final String REJECTED_STATUS = "rj";
   public static final String CANCELLED_STATUS = "cn";
-
-  public static final String PENDING_OR_APPROVED_STATUS = "PENDING OR APPROVED";
-
 }

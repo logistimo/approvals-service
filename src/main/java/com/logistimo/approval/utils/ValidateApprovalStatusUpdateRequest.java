@@ -16,6 +16,7 @@ import static com.logistimo.approval.utils.Constants.APPROVAL_NOT_PENDING;
 import static com.logistimo.approval.utils.Constants.APPROVED_STATUS;
 import static com.logistimo.approval.utils.Constants.CANCELLED_STATUS;
 import static com.logistimo.approval.utils.Constants.EXPIRED_STATUS;
+import static com.logistimo.approval.utils.Constants.INVALID_STATUS;
 import static com.logistimo.approval.utils.Constants.MESSAGE_ID_REQUIRED;
 import static com.logistimo.approval.utils.Constants.PENDING_STATUS;
 import static com.logistimo.approval.utils.Constants.REJECTED_STATUS;
@@ -35,6 +36,14 @@ public class ValidateApprovalStatusUpdateRequest {
 
     if (approval == null) {
       throw new BaseException(Response.SC_NOT_FOUND, APPROVAL_NOT_FOUND, approvalId);
+    }
+
+    if ((!APPROVED_STATUS.equalsIgnoreCase(request.getStatus())) &&
+        (!REJECTED_STATUS.equalsIgnoreCase(request.getStatus())) &&
+        (!CANCELLED_STATUS.equalsIgnoreCase(request.getStatus())) &&
+        (!EXPIRED_STATUS.equalsIgnoreCase(request.getStatus())) &&
+        (!PENDING_STATUS.equalsIgnoreCase(request.getStatus()))) {
+      throw new BaseException(Response.SC_BAD_REQUEST, INVALID_STATUS);
     }
 
     if ((APPROVED_STATUS.equalsIgnoreCase(request.getStatus()) ||
