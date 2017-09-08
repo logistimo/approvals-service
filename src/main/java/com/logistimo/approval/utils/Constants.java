@@ -14,7 +14,7 @@ public class Constants {
 
   public static final String CONVERSATION_TYPE = "APPROVAL";
 
-  public static final String STATUS_UPDATED_BY = "CRON_JOB";
+  public static final String SYSTEM_USER = "system";
 
   public static final String APPROVAL_ALREADY_EXITS = "AS005";
   public static final String STATUS_HISTORY_NOT_FOUND = "AS012";

@@ -26,7 +26,7 @@ import java.util.concurrent.TimeUnit;
 import static com.logistimo.approval.utils.Constants.ACTIVE_STATUS;
 import static com.logistimo.approval.utils.Constants.EXPIRED_STATUS;
 import static com.logistimo.approval.utils.Constants.EXPIRY_TASK;
-import static com.logistimo.approval.utils.Constants.STATUS_UPDATED_BY;
+import static com.logistimo.approval.utils.Constants.SYSTEM_USER;
 import static com.logistimo.approval.utils.Constants.TASK_ACTIVE;
 import static com.logistimo.approval.utils.Constants.TASK_DONE;
 
@@ -109,7 +109,7 @@ public class ScheduledTask {
 
           utility.publishApprovalStatusUpdateEvent(new ApprovalStatusUpdateEvent(
               task.getApprovalId(), approval.getType(), approval.getTypeId(),
-              approval.getRequesterId(), approverIds, EXPIRED_STATUS, STATUS_UPDATED_BY,
+              approval.getRequesterId(), approverIds, EXPIRED_STATUS, SYSTEM_USER,
               approvalFromDB.getUpdatedAt()));
 
         } else {
