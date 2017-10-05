@@ -32,6 +32,7 @@ exec java $JAVA_OPTS -Djava.security.egd=file:/dev/./urandom \
     -Dspring.activemq.user=$ACTIVEMQ_USER \
     -Dspring.activemq.password=$ACTIVEMQ_PASSWORD \
     -Dtask.machine=$TASK_MACHINE \
+    -javaagent:/opt/jmx_prometheus_javaagent-0.7.jar=$JAVA_AGENT_PORT:/opt/jmx_exporter.json \
     -jar /approval-service.jar
 
 
