@@ -21,6 +21,8 @@ apply plugin: 'org.sonarqube'
 
 apply plugin: 'org.springframework.boot'
 
+apply plugin: 'jacoco'
+
 jar {
     baseName = 'approval-service'
     version = '0.1.0'
@@ -35,6 +37,10 @@ repositories {
 
 springBoot {
     mainClass = "com.logistimo.approval.ApprovalApplication"
+}
+
+jacoco {
+    toolVersion = "0.8.1"
 }
 
 group = 'approvals'
