@@ -2,12 +2,21 @@ package com.logistimo.approval.config;
 
 import com.logistimo.approval.entity.Approval;
 import com.logistimo.approval.entity.ApprovalAttributes;
+import com.logistimo.approval.entity.ApprovalDomainMapping;
 import com.logistimo.approval.entity.ApproverQueue;
-import java.util.Date;
-import javax.persistence.criteria.Join;
-import javax.persistence.criteria.Path;
+import com.logistimo.approval.models.AttributeFilter;
+
+import org.apache.commons.lang.StringUtils;
 import org.apache.commons.lang.time.DateUtils;
 import org.springframework.data.jpa.domain.Specification;
+
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
+
+import javax.persistence.criteria.Join;
+import javax.persistence.criteria.Path;
+import javax.persistence.criteria.Predicate;
 
 /**
  * Created by nitisha.khandelwal on 18/05/17.
@@ -15,7 +24,7 @@ import org.springframework.data.jpa.domain.Specification;
 
 public class ApprovalSpecifications {
 
-  public static Specification<Approval> withDomainId(Long domainId) {
+  public static Specification<Approval> withSoureDomainId(Long domainId) {
     if (domainId == null) {
       return null;
     }
@@ -38,14 +47,14 @@ public class ApprovalSpecifications {
   }
 
   public static Specification<Approval> withType(String type) {
-    if (type == null) {
+    if (StringUtils.isBlank(type)) {
       return null;
     }
     return (root, query, cb) -> cb.equal(root.get("type"), type);
   }
 
   public static Specification<Approval> withTypeId(String typeId) {
-    if (typeId == null) {
+    if (StringUtils.isBlank(typeId)) {
       return null;
     }
     return (root, query, cb) -> cb.equal(root.get("typeId"), typeId);
@@ -85,25 +94,37 @@ public class ApprovalSpecifications {
 
   }
 
-  public static Specification<Approval> withApprovalKey(String key) {
-    if (key == null) {
+  public static Specification<Approval> withAttributes(List<AttributeFilter> attributes) {
+    if (attributes == null || attributes.isEmpty()) {
       return null;
     }
-
     return (root, criteriaQuery, criteriaBuilder) -> {
-      Join<Approval, ApprovalAttributes> attributes = root.join("attributes");
-      return criteriaBuilder.equal(attributes.get("key"), key);
+      List<Predicate> predicates = new ArrayList<>(1);
+      for (AttributeFilter attribute : attributes) {
+        if (attribute.getKey() == null || attribute.getValues() == null || attribute.getValues()
+            .isEmpty()) {
+          continue;
+        }
+
+        Join<Approval, ApprovalAttributes> attributesColumn = root.join("attributes");
+        predicates.add(criteriaBuilder
+            .and(criteriaBuilder.equal(attributesColumn.get("key"), attribute.getKey()),
+                attributesColumn.get("value").in(attribute.getValues())));
+      }
+
+      return predicates.isEmpty() ? null : criteriaBuilder
+          .and(predicates.toArray(new Predicate[predicates.size()]));
     };
   }
 
-  public static Specification<Approval> withApprovalValue(String value) {
-    if (value == null) {
+  public static Specification<Approval> withDomainId(Long domainId) {
+    if (domainId == null) {
       return null;
     }
 
     return (root, criteriaQuery, criteriaBuilder) -> {
-      Join<Approval, ApprovalAttributes> attributes = root.join("attributes");
-      return criteriaBuilder.equal(attributes.get("value"), value);
+      Join<Approval, ApprovalDomainMapping> domains = root.join("domains");
+      return criteriaBuilder.equal(domains.get("domainId"), domainId);
     };
   }
 }

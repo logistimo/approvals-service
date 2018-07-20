@@ -24,7 +24,7 @@ public class ApprovalRequest {
   @NotNull(message = "Requester Id cannot be null.")
   private String requesterId;
 
-  @NotNull(message = "Source Domain Id Id cannot be null.")
+  @NotNull(message = "Source Domain Id cannot be null.")
   private Long sourceDomainId;
 
   private List<Long> domains;

@@ -1,16 +1,18 @@
 package com.logistimo.approval.utils;
 
-import static com.logistimo.approval.utils.Constants.CONVERSATION_TYPE;
-
 import com.logistimo.approval.conversationclient.IConversationClient;
 import com.logistimo.approval.conversationclient.request.PostMessageResponse;
 import com.logistimo.approval.conversationclient.response.PostMessageRequest;
+import com.logistimo.approval.models.ApprovalResponse;
 import com.logistimo.approval.models.ApprovalStatusUpdateEvent;
 import com.logistimo.approval.models.ApproverStatusUpdateEvent;
+
 import org.apache.camel.Produce;
 import org.apache.camel.ProducerTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
+
+import static com.logistimo.approval.utils.Constants.CONVERSATION_TYPE;
 
 /**
  * Created by nitisha.khandelwal on 16/05/17.
@@ -28,6 +30,10 @@ public class Utility {
   ProducerTemplate approverStatusProducerTemplate;
 
   @Autowired
+  @Produce(uri = "seda:approval-requested")
+  ProducerTemplate approvalRequestedProducerTemplate;
+
+  @Autowired
   private IConversationClient conversationClient;
 
   public void publishApprovalStatusUpdateEvent(ApprovalStatusUpdateEvent message) {
@@ -36,6 +42,10 @@ public class Utility {
 
   public void publishApproverStatusUpdateEvent(ApproverStatusUpdateEvent message) {
     approverStatusProducerTemplate.sendBody(message);
+  }
+
+  public void publishApprovalRequestedEvent(ApprovalResponse message) {
+    approvalRequestedProducerTemplate.sendBody(message);
   }
 
   public PostMessageResponse addMessageToConversation(String approvalId, String message,

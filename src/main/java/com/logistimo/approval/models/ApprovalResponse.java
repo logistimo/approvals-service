@@ -1,5 +1,7 @@
 package com.logistimo.approval.models;
 
+import com.fasterxml.jackson.annotation.JsonInclude;
+import com.fasterxml.jackson.annotation.JsonInclude.Include;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
@@ -12,6 +14,7 @@ import lombok.Data;
  */
 
 @Data
+@JsonInclude(Include.NON_EMPTY)
 public class ApprovalResponse {
 
   private String approvalId;
@@ -41,5 +44,7 @@ public class ApprovalResponse {
   private Date createdAt;
 
   private Date updatedAt;
+
+  private String updatedBy;
 
 }

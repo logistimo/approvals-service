@@ -5,18 +5,17 @@ import org.apache.camel.model.dataformat.JsonLibrary;
 import org.springframework.stereotype.Component;
 
 /**
- * Created by nitisha.khandelwal on 21/06/17.
+ * Created by charan on 14/07/17.
  */
-
 @Component
-public class ApprovalStatusUpdateRoute extends RouteBuilder {
+public class ApprovalCreationRoute extends RouteBuilder {
 
   @Override
   public void configure() throws Exception {
-    from("seda:approval-status-update")
+    from("seda:approval-requested")
         .marshal()
         .json(JsonLibrary.Gson)
         .delay(5000)
-        .to("activemq:approval-status-update");
+        .to("activemq:approval-requested");
   }
 }

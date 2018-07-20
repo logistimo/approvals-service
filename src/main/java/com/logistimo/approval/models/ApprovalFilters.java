@@ -1,17 +1,29 @@
 package com.logistimo.approval.models;
 
-import static com.logistimo.approval.utils.Constants.*;
-
 import com.logistimo.approval.exception.BaseException;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import lombok.Data;
+
 import org.apache.catalina.connector.Response;
 import org.apache.commons.lang.StringUtils;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.domain.Sort.Direction;
 import org.springframework.data.domain.Sort.Order;
+
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+
+import lombok.Data;
+
+import static com.logistimo.approval.utils.Constants.APPROVER_ID_NOT_PRESENT;
+import static com.logistimo.approval.utils.Constants.ASCENDING;
+import static com.logistimo.approval.utils.Constants.COLON;
+import static com.logistimo.approval.utils.Constants.COMMA;
+import static com.logistimo.approval.utils.Constants.DEFAULT_SORT_ORDER;
+import static com.logistimo.approval.utils.Constants.DESCENDING;
+import static com.logistimo.approval.utils.Constants.INCORRECT_SORT_PARAM;
+import static com.logistimo.approval.utils.Constants.INVALID_STATUS_AND_EXPIRING_IN_COMBINATION;
+import static com.logistimo.approval.utils.Constants.KEY_OR_VALUE_MISSING;
+import static com.logistimo.approval.utils.Constants.PENDING_STATUS;
 
 /**
  * Created by nitisha.khandelwal on 12/06/17.
@@ -38,11 +50,9 @@ public class ApprovalFilters {
 
   private String approverStatus;
 
-  private String attributeKey;
+  private List<AttributeFilter> attributes = new ArrayList<>(1);
 
-  private String attributeValue;
-
-  private int domainId;
+  private Long domainId;
 
   private String sortQuery;
 
@@ -59,9 +69,11 @@ public class ApprovalFilters {
       throw new BaseException(Response.SC_BAD_REQUEST, APPROVER_ID_NOT_PRESENT);
     }
 
-    if ((StringUtils.isNotEmpty(attributeKey) && StringUtils.isEmpty(attributeValue))
-        || StringUtils.isNotEmpty(attributeValue) && StringUtils.isEmpty(attributeKey)) {
-      throw new BaseException(Response.SC_BAD_REQUEST, KEY_OR_VALUE_MISSING);
+    for (AttributeFilter attribute : attributes) {
+      if ((StringUtils.isNotEmpty(attribute.getKey()) && attribute.getValues().isEmpty())
+          || !attribute.getValues().isEmpty() && StringUtils.isEmpty(attribute.getKey())) {
+        throw new BaseException(Response.SC_BAD_REQUEST, KEY_OR_VALUE_MISSING);
+      }
     }
 
     if (expiringInMinutes != null) {

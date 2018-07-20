@@ -16,6 +16,7 @@ public class ApproverStatusUpdateRoute extends RouteBuilder {
     from("seda:approver-status-update")
         .marshal()
         .json(JsonLibrary.Gson)
+        .delay(5000)
         .to("activemq:approver-status-update");
   }
 }

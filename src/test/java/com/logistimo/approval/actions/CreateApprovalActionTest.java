@@ -85,8 +85,6 @@ public class CreateApprovalActionTest {
     ApprovalRequest request = getApprovalRequest();
     ApprovalResponse response = action.invoke(getApprovalRequest());
 
-    verify(approvalRepository, times(1))
-        .findApprovedOrPendingApprovalsByTypeAndTypeId(anyString(), anyString());
     verify(approvalAttributesRepository, times(request.getAttributes().size()))
         .save(any(ApprovalAttributes.class));
     verify(approvalDomainMappingRepository, times(request.getDomains().size()))
@@ -108,21 +106,5 @@ public class CreateApprovalActionTest {
     assertEquals(response.getAttributes(), request.getAttributes());
     assertEquals(response.getCreatedAt(), getApprovalFromDB().getCreatedAt());
     assertEquals(response.getUpdatedAt(), getApprovalFromDB().getUpdatedAt());
-  }
-
-  @Test(expected = BaseException.class)
-  public void approvalAlreadyExists() throws IOException {
-
-    ApprovalRequest request = new ApprovalRequest();
-    request.setType("order");
-    request.setTypeId("O001");
-
-    when(approvalRepository.findApprovedOrPendingApprovalsByTypeAndTypeId("order", "O001"))
-        .thenReturn(Collections.singletonList(getApproval()));
-
-    action.invoke(request);
-
-    verify(approvalRepository, times(1))
-        .findApprovedOrPendingApprovalsByTypeAndTypeId(anyString(), anyString());
   }
 }

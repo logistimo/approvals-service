@@ -1,6 +1,5 @@
-#!/bin/bash -x
+#!/bin/bash
 
-#
 # Copyright © 2017 Logistimo.
 #
 # This file is part of Logistimo.
@@ -21,8 +20,7 @@
 #
 # You can be released from the requirements of the license by purchasing a commercial license. To know more about
 # the commercial license, please contact us at opensource@logistimo.com
-
-
+#
 
 exec java $JAVA_OPTS -Djava.security.egd=file:/dev/./urandom \
     -Dserver.port=$SERVER_PORT \
@@ -33,6 +31,7 @@ exec java $JAVA_OPTS -Djava.security.egd=file:/dev/./urandom \
     -Dspring.activemq.broker-url=$ACTIVEMQ_BROKER_URL \
     -Dspring.activemq.user=$ACTIVEMQ_USER \
     -Dspring.activemq.password=$ACTIVEMQ_PASSWORD \
+    -Dtask.machine=$TASK_MACHINE \
     -javaagent:/opt/jmx_prometheus_javaagent-0.7.jar=$JAVA_AGENT_PORT:/opt/jmx_exporter.json \
     -jar /approval-service.jar
 

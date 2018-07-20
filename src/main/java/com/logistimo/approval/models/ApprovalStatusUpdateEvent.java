@@ -2,6 +2,7 @@ package com.logistimo.approval.models;
 
 import java.io.Serializable;
 import java.util.Date;
+import java.util.List;
 import javax.validation.constraints.NotNull;
 import lombok.Data;
 
@@ -12,11 +13,13 @@ import lombok.Data;
 @Data
 public class ApprovalStatusUpdateEvent implements Serializable {
 
-  public ApprovalStatusUpdateEvent(String approvalId, String type, String typeId,
-      String status, String updatedBy, Date updatedAt) {
+  public ApprovalStatusUpdateEvent(String approvalId, String type, String typeId, String requesterId,
+      List<String> approverIds, String status, String updatedBy, Date updatedAt) {
     this.approvalId = approvalId;
     this.type = type;
     this.typeId = typeId;
+    this.requesterId = requesterId;
+    this.approverIds = approverIds;
     this.status = status;
     this.updatedBy = updatedBy;
     this.updatedAt = updatedAt;
@@ -30,6 +33,12 @@ public class ApprovalStatusUpdateEvent implements Serializable {
 
   @NotNull
   private String typeId;
+
+  @NotNull
+  private String requesterId;
+
+  @NotNull
+  private List<String> approverIds;
 
   @NotNull
   private String status;

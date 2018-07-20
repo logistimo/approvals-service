@@ -14,4 +14,7 @@ public interface ITaskRepository extends CrudRepository<Task, Long> {
 
   @Query(value = "SELECT * FROM tasks WHERE status = 'qd' and run_time <= ?1", nativeQuery = true)
   List<Task> findPendingTasks(Date now);
+
+  @Query(value = "SELECT * FROM tasks WHERE status = 'qd'  and approval_id = ?1", nativeQuery = true)
+  List<Task> findPendingTasksByApprovalId(String approvalId);
 }

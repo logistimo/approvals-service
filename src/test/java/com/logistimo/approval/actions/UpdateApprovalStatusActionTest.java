@@ -19,10 +19,13 @@ import com.logistimo.approval.models.ApprovalStatusUpdateEvent;
 import com.logistimo.approval.models.StatusUpdateRequest;
 import com.logistimo.approval.repository.IApprovalRepository;
 import com.logistimo.approval.repository.IApprovalStatusHistoryRepository;
+import com.logistimo.approval.repository.IApproverQueueRepository;
+import com.logistimo.approval.repository.ITaskRepository;
 import com.logistimo.approval.utils.Constants;
 import com.logistimo.approval.utils.Utility;
 import java.io.IOException;
 import java.util.Collections;
+import java.util.ResourceBundle;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -30,6 +33,7 @@ import org.mockito.ArgumentCaptor;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit4.SpringRunner;
 
@@ -45,7 +49,13 @@ public class UpdateApprovalStatusActionTest {
   private IApprovalRepository approvalRepository;
 
   @Mock
+  private IApproverQueueRepository approverQueueRepository;
+
+  @Mock
   private IApprovalStatusHistoryRepository statusHistoryRepository;
+
+  @Mock
+  private ITaskRepository taskRepository;
 
   @Mock
   private Utility utility;
@@ -60,6 +70,8 @@ public class UpdateApprovalStatusActionTest {
         .thenReturn(getLastStatus());
     when(statusHistoryRepository.save(any(ApprovalStatusHistory.class)))
         .thenReturn(getCurrentStatus());
+    when(approverQueueRepository.findByApprovalId(anyString())).thenReturn(getApprovers());
+    when(taskRepository.findPendingTasksByApprovalId(anyString())).thenReturn(null);
   }
 
   @Test
@@ -75,7 +87,8 @@ public class UpdateApprovalStatusActionTest {
     verify(approvalRepository, times(1)).save(any(Approval.class));
     verify(statusHistoryRepository, times(2)).save(any(ApprovalStatusHistory.class));
     verify(utility, times(1)).publishApprovalStatusUpdateEvent(eventCaptor.capture());
-    verify(utility, times(1)).addMessageToConversation(anyString(), anyString(), anyString(), any());
+    verify(utility, times(1))
+        .addMessageToConversation(anyString(), anyString(), anyString(), any());
 
     assertEquals(eventCaptor.getValue().getStatus(), request.getStatus());
     assertEquals(eventCaptor.getValue().getUpdatedBy(), request.getUpdatedBy());
@@ -93,7 +106,7 @@ public class UpdateApprovalStatusActionTest {
       action.invoke(APPROVAL_ID, getStatusUpdateRequest());
     } catch (BaseException e) {
       verify(approvalRepository, times(1)).findOne(APPROVAL_ID);
-      assertEquals(e.getMessage(), Constants.APPROVAL_NOT_PENDING);
+      assertEquals(e.getMessage(), ResourceBundle.getBundle("errors").getString(Constants.APPROVAL_NOT_PENDING));
       throw e;
     }
   }
@@ -108,7 +121,7 @@ public class UpdateApprovalStatusActionTest {
       action.invoke(APPROVAL_ID, request);
     } catch (BaseException e) {
       verify(approvalRepository, times(1)).findOne(APPROVAL_ID);
-      assertEquals(e.getMessage(), Constants.MESSAGE_ID_REQUIRED);
+      assertEquals(e.getMessage(), ResourceBundle.getBundle("errors").getString(Constants.MESSAGE_ID_REQUIRED));
       throw e;
     }
   }
@@ -122,7 +135,7 @@ public class UpdateApprovalStatusActionTest {
       action.invoke(APPROVAL_ID, request);
     } catch (BaseException e) {
       verify(approvalRepository, times(1)).findOne(APPROVAL_ID);
-      assertEquals(e.getMessage(), Constants.UPDATED_BY_REQUSTER_ID);
+      assertEquals(e.getMessage(), ResourceBundle.getBundle("errors").getString(Constants.UPDATED_BY_REQUSTER_ID));
       throw e;
     }
   }
@@ -137,7 +150,7 @@ public class UpdateApprovalStatusActionTest {
       action.invoke(APPROVAL_ID, getStatusUpdateRequest());
     } catch (BaseException e) {
       verify(approvalRepository, times(1)).findOne(APPROVAL_ID);
-      assertEquals(e.getMessage(), Constants.REQUESTER_ID_NOT_ACTIVE);
+      assertEquals(e.getMessage(), ResourceBundle.getBundle("errors").getString(Constants.REQUESTER_ID_NOT_ACTIVE));
       throw e;
     }
   }
@@ -151,7 +164,7 @@ public class UpdateApprovalStatusActionTest {
       action.invoke(APPROVAL_ID, request);
     } catch (BaseException e) {
       verify(approvalRepository, times(1)).findOne(APPROVAL_ID);
-      assertEquals(e.getMessage(), Constants.REQUESTER_NOT_PRESENT);
+      assertEquals(e.getMessage(), ResourceBundle.getBundle("errors").getString(Constants.REQUESTER_NOT_PRESENT));
       throw e;
     }
   }
@@ -165,7 +178,7 @@ public class UpdateApprovalStatusActionTest {
       action.invoke(APPROVAL_ID, request);
     } catch (BaseException e) {
       verify(approvalRepository, times(1)).findOne(APPROVAL_ID);
-      assertEquals(e.getMessage(), Constants.REQUESTER_ID_CANNOT_BE_AN_APPROVER);
+      assertEquals(e.getMessage(), ResourceBundle.getBundle("errors").getString(Constants.REQUESTER_ID_CANNOT_BE_AN_APPROVER));
       throw e;
     }
   }

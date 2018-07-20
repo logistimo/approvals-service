@@ -56,6 +56,6 @@ public class ApprovalStatusHistory {
   private Date endTime;
 
   @Version
-  @Column(name = "version")
+  @Column(name = "version", columnDefinition = "integer DEFAULT 0", nullable = false)
   private Long version;
 }
