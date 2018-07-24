@@ -22,6 +22,8 @@
 # the commercial license, please contact us at opensource@logistimo.com
 #
 
+
+
 exec java $JAVA_OPTS -Djava.security.egd=file:/dev/./urandom \
     -Dserver.port=$SERVER_PORT \
     -Dspring.datasource.url=$MYSQL_HOST \
@@ -33,6 +35,10 @@ exec java $JAVA_OPTS -Djava.security.egd=file:/dev/./urandom \
     -Dspring.activemq.password=$ACTIVEMQ_PASSWORD \
     -Dtask.machine=$TASK_MACHINE \
     -javaagent:/opt/jmx_prometheus_javaagent-0.7.jar=$JAVA_AGENT_PORT:/opt/jmx_exporter.json \
+    -javaagent:/opt/elastic-apm-agent-0.6.0.jar \
+	-Delastic.apm.service_name=$SERVICE_NAME \
+    -Delastic.apm.application_packages=com.logistimo.approval \
+    -Delastic.apm.server_url=http://$APM_SERVER_URL \
     -jar /approval-service.jar
 
 
