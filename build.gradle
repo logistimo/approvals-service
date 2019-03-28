@@ -28,7 +28,7 @@ apply plugin: 'net.researchgate.release'
 
 jar {
     baseName = 'approval-service'
-    version = '$VERSION'
+    version = '$version'
 }
 
 sourceCompatibility = 1.8
