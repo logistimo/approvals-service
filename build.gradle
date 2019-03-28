@@ -8,7 +8,6 @@ buildscript {
         classpath("org.springframework.boot:spring-boot-gradle-plugin:${springBootVersion}")
         classpath("org.sonarsource.scanner.gradle:sonarqube-gradle-plugin:2.5")
         classpath('se.transmode.gradle:gradle-docker:1.2')
-        classpath 'net.researchgate:gradle-release:2.4.0'
     }
 }
 
@@ -23,8 +22,6 @@ apply plugin: 'org.sonarqube'
 apply plugin: 'org.springframework.boot'
 
 apply plugin: 'jacoco'
-
-apply plugin: 'net.researchgate.release'
 
 if (project.hasProperty('projVersion')) {
   project.version = project.projVersion
