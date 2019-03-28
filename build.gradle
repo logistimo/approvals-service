@@ -26,6 +26,13 @@ apply plugin: 'jacoco'
 
 apply plugin: 'net.researchgate.release'
 
+if (project.hasProperty('projVersion')) {
+  project.version = project.projVersion
+} else {
+  project.version = '0.1.0'
+}
+
+
 jar {
     baseName = 'approval-service'
     version = '0.1.0'
