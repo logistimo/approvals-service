@@ -36,8 +36,8 @@ RUN bash -c 'touch /app.jar'
 
 ADD jmx_exporter.json /opt/
 
-RUN cd /opt/ && wget http://repo1.maven.org/maven2/io/prometheus/jmx/jmx_prometheus_javaagent/0.7/jmx_prometheus_javaagent-0.7.jar \
-	&& wget http://repo1.maven.org/maven2/co/elastic/apm/elastic-apm-agent/0.6.0/elastic-apm-agent-0.6.0.jar
+RUN cd /opt/ && wget https://repo1.maven.org/maven2/io/prometheus/jmx/jmx_prometheus_javaagent/0.7/jmx_prometheus_javaagent-0.7.jar \
+	&& wget https://repo1.maven.org/maven2/co/elastic/apm/elastic-apm-agent/0.6.0/elastic-apm-agent-0.6.0.jar
 
 COPY docker-entrypoint.sh /docker-entrypoint.sh
 
