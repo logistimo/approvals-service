@@ -23,6 +23,8 @@ import java.util.List;
 public class TestUtility {
 
   public static final String APPROVAL_ID = "A123";
+  private static final String ORDER = "order";
+  private static final String PENDING = "PENDING";
 
   public static List<ApprovalDomainMapping> getApprovalDomainMappings() {
     return Collections.singletonList(new ApprovalDomainMapping(APPROVAL_ID, 16L));
@@ -36,7 +38,7 @@ public class TestUtility {
   public static Approval getApproval() {
     Approval approval = new Approval();
     approval.setId(APPROVAL_ID);
-    approval.setType("order");
+    approval.setType(ORDER);
     approval.setTypeId("O001");
     approval.setStatus("PN");
     approval.setRequesterId("R001");
@@ -57,9 +59,9 @@ public class TestUtility {
   public static Approval getApprovalFromDB() {
     Approval approval = new Approval();
     approval.setId("A789");
-    approval.setType("order");
+    approval.setType(ORDER);
     approval.setTypeId("O002");
-    approval.setStatus("PENDING");
+    approval.setStatus(PENDING);
     approval.setRequesterId("R002");
     approval.setSourceDomainId(2L);
     approval.setConversationId("C001");
@@ -73,7 +75,7 @@ public class TestUtility {
 
   public static List<ApprovalStatusHistory> getApprovalStatusHistories() {
     List<ApprovalStatusHistory> statusHistories = new ArrayList<>();
-    statusHistories.add(new ApprovalStatusHistory(APPROVAL_ID, "PENDING", "R001", null, null));
+    statusHistories.add(new ApprovalStatusHistory(APPROVAL_ID, PENDING, "R001", null, null));
     statusHistories.add(new ApprovalStatusHistory(APPROVAL_ID, "APPROVED", "U002", null, null));
     return statusHistories;
   }
@@ -94,7 +96,7 @@ public class TestUtility {
   }
 
   public static ApprovalStatusHistory getLastStatus() {
-    return new ApprovalStatusHistory(APPROVAL_ID, "PENDING", "R001", null, null);
+    return new ApprovalStatusHistory(APPROVAL_ID, PENDING, "R001", null, null);
   }
 
   public static ApprovalStatusHistory getCurrentStatus() {
@@ -104,7 +106,7 @@ public class TestUtility {
 
   public static ApprovalRequest getApprovalRequest() {
     ApprovalRequest request = new ApprovalRequest();
-    request.setType("order");
+    request.setType(ORDER);
     request.setTypeId("O002");
     request.setRequesterId("R002");
     request.setSourceDomainId(2L);
